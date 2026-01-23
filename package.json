@@ -6,8 +6,7 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc",
-    "create:migration": "npm --cwd db-migration create:migration"
+    "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
     "@codeJ09/data-table": "^0.1.13",

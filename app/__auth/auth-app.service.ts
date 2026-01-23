@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { FrameWorkEngine } from "~/__clarity-admin/freame-work/frame-work-engine";
+import { ShellEngine } from "~/__clarity-admin/freame-work/frame-work-engine";
 import { TABLE_NAMES } from "~/__shared-constants/contstants";
 
 export interface User {
@@ -8,11 +8,12 @@ export interface User {
   email: string;
 }
 
-export class AuthService extends FrameWorkEngine {
+export class AuthService extends ShellEngine {
 
   constructor() {
     super();
   }
+  
   async validateLogin(email: string, password: string): Promise<User | null> {
     const user = await this.sql_query(TABLE_NAMES.USERS)
       .where({ u_email: email.trim(), u_status: 1 })

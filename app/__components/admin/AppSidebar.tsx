@@ -13,12 +13,7 @@ type AppSidebarProps = {
   items: SidebarItem[];
 };
 
-export function AppSidebar({
-  sidebarOpen,
-  isMobile,
-  onClose,
-  items,
-}: AppSidebarProps) {
+export function AppSidebar({ sidebarOpen, isMobile, onClose, items, }: AppSidebarProps) {
   const { appType, runType } = useParams();
 
   return (
@@ -34,13 +29,10 @@ export function AppSidebar({
               return (
                 <Link
                   key={item.name}
-                  to={`/${item.appType}/${item.runType}`}
+                  to={`/list/${item.appType}/${item.runType}`}
                   onClick={isMobile ? onClose : undefined}
-                  className={`block px-4 py-2.5 rounded-lg text-sm font-medium
-                    ${isActive
-                      ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-                      : "text-gray-700 hover:bg-gray-50"
-                    }`}
+                  className={`block px-3 py-2 rounded-lg text-sm font-medium
+                    ${isActive ? "bg-indigo-50 text-indigo-700 border border-indigo-200" : "text-gray-700 hover:bg-gray-50"}`}
                 >
                   {item.name}
                 </Link>

@@ -7,7 +7,7 @@ import { LoginForm } from "~/__components/LoginCard";
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request);
   if (session?.get("userId")) {
-    return redirect("/ROOFTOPS/GET_ROOFTOPS");
+    return redirect("/list/ROOFTOPS/GET_ROOFTOPS");
   }
   return null;
 };
@@ -24,7 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
     return { error: "Invalid email or password" };
   }
 
-  return createUserSession(user.id, "/ROOFTOPS/GET_ROOFTOPS");
+  return createUserSession(user.id, "/list/ROOFTOPS/GET_ROOFTOPS");
 };
 
 export default function LoginRoute() {

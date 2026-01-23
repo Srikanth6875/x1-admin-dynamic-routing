@@ -17,9 +17,6 @@ export const sessionStorage = createCookieSessionStorage({
   },
 });
 
-/**
- * Get session from request (or null if no cookie)
- */
 export async function getSession(request: Request) {
   const cookie = request.headers.get("Cookie");
   if (!cookie) return null;
@@ -56,9 +53,19 @@ export async function requireUserSession(request: Request) {
     throw redirect("/login");
   }
 
-  const userId = session.get("userId") as number;
+  const userId = session.get("userId") as number | undefined;
   const lastActivity = session.get("lastActivity") as number | undefined;
   const now = Date.now();
+
+  // Invalid or missing session data → destroy cookie
+  if (!userId || !lastActivity) {
+    throw redirect("/login", {
+      headers: {
+        "Set-Cookie": await sessionStorage.destroySession(session),
+      },
+    });
+  }
+
 
   // User logged in but idle too long → destroy session
   if (lastActivity && now - lastActivity > SESSION_TIMEOUT_MS) {

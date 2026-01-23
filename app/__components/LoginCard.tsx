@@ -4,6 +4,15 @@ type Props = {
     error?: string;
 };
 
+type FieldProps = {
+    id: string;
+    name: string;
+    label: string;
+    type?: string;
+    placeholder?: string;
+    autoComplete?: string;
+};
+
 export function LoginForm({ error }: Props) {
     return (
         <div className="max-w-md w-full">
@@ -57,20 +66,6 @@ export function LoginForm({ error }: Props) {
         </div>
     );
 }
-
-/* ------------------------------------------------------------------ */
-/* Internal helper – not exported                                      */
-/* ------------------------------------------------------------------ */
-
-type FieldProps = {
-    id: string;
-    name: string;
-    label: string;
-    type?: string;
-    placeholder?: string;
-    autoComplete?: string;
-};
-
 
 function LoginFields({ id, name, label, type = "text", placeholder, autoComplete, }: FieldProps) {
     return (

@@ -1,12 +1,12 @@
-export const MAKE_TABLE_CONFIG = {
+export const RESELLER_TABLE_CONFIG = {
   features: {
     search: {
-      placeholder: "Search makes...",
+      placeholder: "Search Rooftops...",
     },
   },
 };
 
-export const MAKE_COLUMNS_CONFIG = [
+export const COLUMNS_CONFIG = [
   { key: "rt_dealer_id", label: "Rooftop ID", type: "string" },
   { key: "rt_name", label: "Roof Top Name", type: "string" },
   { key: "rt_street", label: "Street", type: "string" },

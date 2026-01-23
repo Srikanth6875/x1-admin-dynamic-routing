@@ -1,16 +1,20 @@
 import React from "react";
 import { DataTable } from "@codeJ09/data-table";
 import { UIComponentType } from "~/__shared-constants/ui.enums";
-import type { RenderResult, TablePayload } from "./freame-work/types";
-
-type RendererProps = {
-  render: RenderResult;
-};
+import type { FrameWorkRendererProps, TablePayload } from "./freame-work/types";
 
 // Map UI component types to React components
-const UiComponentMap: Record<UIComponentType, React.FC<{ payload: TablePayload }>> = {
+const UiComponentMap: Record<UIComponentType, React.FC<{ payload: TablePayload & { table_header?: string } }>> = {
   [UIComponentType.TABLE]: ({ payload }) => (
-    <div className="dynamic-data-table">
+    <section className="space-y-2">
+      {payload.table_header && (
+        <div className="rounded-md bg-gray-50 border border-gray-200 px-2 py-1">
+          <h1 className="text-lg font-semibold text-gray-900">
+            {payload?.table_header}
+          </h1>
+        </div>
+      )}
+
       <DataTable
         data={{
           data: payload.data,
@@ -18,11 +22,11 @@ const UiComponentMap: Record<UIComponentType, React.FC<{ payload: TablePayload }
         }}
         config={payload.config}
       />
-    </div>
+    </section>
   ),
 };
 
-export function FrameworkRenderer({ render }: RendererProps) {
+export function FrameworkRenderer({ render }: FrameWorkRendererProps) {
   const Component = UiComponentMap[render.type];
   return Component ? <Component payload={render.payload} /> : null;
 }

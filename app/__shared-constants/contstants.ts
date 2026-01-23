@@ -1,5 +1,5 @@
 export const TABLE_NAMES = {
-    USERS : 'users',
+    USERS: 'users',
     VEHICLES: 'vehicles',
     ROOFTOP: 'rooftop',
     VEHICLE_YEAR: 'veh_year',
@@ -12,7 +12,6 @@ export const TABLE_NAMES = {
     IMPORT_JOBS: 'import_jobs',
     IMPORT_FILE_JOBS: 'import_file_jobs'
 };
-
 
 export const MONGO_COLLECTIONS = {
     VEHICLE_DESCRIPTION: 'vehicle_descriptions',

@@ -14,20 +14,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const topNavItems = [
-  // { name: "rooftops", appType: "ROOFTOPS", runType: "GET_ROOFTOPS" },
-  // { name: "Vehicles", appType: "VEHICLES", runType: "VEHICLE_LIST" },
+  { name: "rooftops", appType: "ROOFTOPS", runType: "GET_ROOFTOPS" },
+  { name: "Vehicles", appType: "VEHICLES", runType: "VEHICLE_LIST" },
 ];
 
 export const sidebarItems = [
-  { name: "rooftops", appType: "ROOFTOPS", runType: "GET_ROOFTOPS" },
-  { name: "Vehicles", appType: "VEHICLES", runType: "VEHICLE_LIST" },
-  { name: "Makes", appType: "MAKE", runType: "MAKE_LIST" },
+  { name: "Makes", appType: "VEH_INFO", runType: "GET_MAKES" },
+  { name: "Model", appType: "VEH_INFO", runType: "MODEL_LIST" },
+  { name: "Trim", appType: "VEH_INFO", runType: "VEH_TRIMS" },
+  { name: "Years", appType: "VEH_INFO", runType: "YEAR_LIST" },
+  { name: "Body Types", appType: "VEH_INFO", runType: "BODY_TYPES" },
+  { name: "Int/Ext Colors", appType: "VEH_INFO", runType: "VEH_COLORS" },
 ];
 
 export default function AppLayout() {
   const location = useLocation();
+  const navigation = useNavigation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const isLoading = navigation.state === "loading";
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -47,6 +52,12 @@ export default function AppLayout() {
         items={topNavItems}
       />
 
+      {isLoading && (
+        <div className="fixed top-12 left-0 z-30 h-1 w-full overflow-hidden bg-[oklch(64.5%_0.246_16.439_/_0.25)]">
+          <div className="h-full w-full animate-loading-bar bg-[oklch(64.5%_0.246_16.439)]" />
+        </div>
+      )}
+
       <AppSidebar
         sidebarOpen={sidebarOpen}
         isMobile={isMobile}
@@ -54,10 +65,7 @@ export default function AppLayout() {
         items={sidebarItems}
       />
 
-      <main
-        className={`pt-12 transition-all duration-300 ${sidebarOpen ? "md:pl-56" : "md:pl-0"
-          }`}
-      >
+      <main className={`pt-12 transition-all duration-300 ${sidebarOpen ? "md:pl-56" : "md:pl-0"}`}>
         <div className="p-3 md:p-4 max-w-full mx-auto">
           <Outlet />
         </div>

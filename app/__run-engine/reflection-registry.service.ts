@@ -13,12 +13,11 @@ class ReflectionService {
     if (!isDev && this.initialized) return;
     this.ReflectionClasses.clear();
 
-    const serviceFiles = await import("~/__apps/admin-includes");
+    const serviceFiles = await import("~/__x1-apps/admin-includes");
 
     for (const key of Object.keys(serviceFiles)) {
       this.registerClass((serviceFiles as any)[key]);
     }
-
     this.initialized = true;
   }
 
@@ -42,7 +41,6 @@ class ReflectionService {
       console.warn(`[Reflection] Class not registered: ${name}`);
       return null;
     }
-
     return new ClassRef();
   }
 
@@ -89,10 +87,10 @@ export const ReflectionRegistry: ReflectionService = isDev ? new ReflectionServi
 // auto-init
 void ReflectionRegistry.runEngine();
 
-// if (isDev) {
-//   void (async () => {
-//     await ReflectionRegistry.runEngine();
-//     console.log("[Reflection][DEV] Registered Classes:", ReflectionRegistry.listAllClasses());
-//   })();
-// }
+if (isDev) {
+  void (async () => {
+    await ReflectionRegistry.runEngine();
+    console.log("[Reflection][DEV] Registered Classes:", ReflectionRegistry.listAllClasses());
+  })();
+}
 

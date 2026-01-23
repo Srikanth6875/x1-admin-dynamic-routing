@@ -37,10 +37,7 @@ export class VehicleService extends FrameWorkAppService {
             query,
             columns: VEHICLE_COLUMNS_CONFIG,
             configOverrides: VEHICLE_TABLE_CONFIG,
+            table_header: "Vehicles List",
         });
-    }
-
-    async getVehicleMakes(){
-
     }
 }

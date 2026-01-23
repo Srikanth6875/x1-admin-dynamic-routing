@@ -7,7 +7,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const userId = session?.get("userId"); // safe check
   if (userId) {
-    return redirect("/ROOFTOPS/GET_ROOFTOPS");
+    return redirect("/list/ROOFTOPS/GET_ROOFTOPS");
   }
 
   return redirect("/login");
