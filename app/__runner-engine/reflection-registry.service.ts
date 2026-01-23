@@ -41,10 +41,11 @@ class ReflectionService {
       console.warn(`[Reflection] Class not registered: ${name}`);
       return null;
     }
+
     return new ClassRef();
   }
 
-  async executeReflectionEngine<T = any>(className?: string, methodName?: string, args: any[] = []): Promise<T> {
+  async executeReflectionEngine<T = any>(className: string, methodName: string, args: any[] = []): Promise<T> {
     if (!className || !methodName) return [] as T;
     await this.runEngine();
 
