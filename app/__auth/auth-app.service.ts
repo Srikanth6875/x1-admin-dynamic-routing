@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import { ShellEngine } from "~/__clarity-admin/freame-work/frame-work-engine";
 import { TABLE_NAMES } from "~/__shared-constants/contstants";
-
 export interface User {
   id: number;
   username: string;
@@ -38,9 +37,7 @@ export class AuthService extends ShellEngine {
     return await this.getDefaultAppPermission(userId, appType);
   }
 
-
   private async getRunTypePermission(userId: number, appType: string, runType: string) {
-    // console.log(userId, appType, runType, "$######################");
     const row = await this.sql_query('users as u')
       .join('user_role_map as urm', 'u.u_id', 'urm.urm_u_id')
       .join('roles as r', 'urm.urm_r_id', 'r.r_id')

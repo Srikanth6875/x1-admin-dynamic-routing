@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Outlet, useLocation, redirect, type LoaderFunctionArgs, useNavigation, } from "react-router";
+import { Outlet, useLocation, redirect, type LoaderFunctionArgs, useNavigation, useRouteError, } from "react-router";
 import { AppHeader } from "~/__components/admin/AppHeader";
 import { AppSidebar } from "~/__components/admin/AppSidebar";
 import { requireUserSession } from "~/__auth/auth-session.service";
@@ -70,6 +70,18 @@ export default function AppLayout() {
           <Outlet />
         </div>
       </main>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  console.error("Admin Error:", error);
+
+  return (
+    <div style={{ padding: 40 }}>
+      <h1>Admin Section Error</h1>
+      <pre>{error instanceof Error ? error.message : JSON.stringify(error)}</pre>
     </div>
   );
 }
