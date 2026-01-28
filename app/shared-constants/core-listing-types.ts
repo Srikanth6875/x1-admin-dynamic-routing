@@ -1,4 +1,4 @@
-import type { UIComponentType } from "./ui.enums";
+import type { UIComponentType } from "./admin.enums";
 
 export type PermissionExecuteArgs = {
   userId: number;

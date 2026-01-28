@@ -1,7 +1,7 @@
 import { ShellEngine } from "./frame-work-engine";
 import { DEFAULT_TABLE_CONFIG } from "./default-table-config";
 import type { RenderResult } from "./types";
-import { UIComponentType } from "~/shared-constants/ui.enums";
+import { UIComponentType } from "~/shared-constants/admin.enums";
 
 export abstract class FrameWorkAppService extends ShellEngine {
   protected async buildTable({ query, columns, configOverrides = {}, table_header, }: {
