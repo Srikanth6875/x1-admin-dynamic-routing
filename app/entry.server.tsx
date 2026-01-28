@@ -4,7 +4,7 @@ import { createReadableStreamFromReadable } from "@react-router/node";
 import { PassThrough } from "node:stream";
 import type { EntryContext } from "react-router";
 import { isbot } from "isbot";
-import "./__runner-engine/reflection-registry.service";
+import "./runner-engine/reflection-registry.service";
 
 const ABORT_DELAY = 5000;
 

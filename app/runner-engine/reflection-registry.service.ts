@@ -13,7 +13,7 @@ class ReflectionService {
     if (!isDev && this.initialized) return;
     this.ReflectionClasses.clear();
 
-    const serviceFiles = await import("~/__x1-apps/admin-includes");
+    const serviceFiles = await import("~/x1-apps/admin-includes");
 
     for (const key of Object.keys(serviceFiles)) {
       this.registerClass((serviceFiles as any)[key]);

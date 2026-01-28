@@ -1,6 +1,6 @@
-import { COLUMNS_CONFIG, RESELLER_TABLE_CONFIG, } from "~/__x1-apps/rooftops/rooftop-settings";
-import { FrameWorkAppService } from "../../__clarity-admin/freame-work/frame-work-app";
-import { TABLE_NAMES } from "~/__shared-constants/contstants";
+import { COLUMNS_CONFIG, RESELLER_TABLE_CONFIG, } from "~/x1-apps/rooftops/rooftop-settings";
+import { FrameWorkAppService } from "../../clarity-admin/freame-work/frame-work-app";
+import { TABLE_NAMES } from "~/shared-constants/contstants";
 
 export class ResellerAppService extends FrameWorkAppService {
 

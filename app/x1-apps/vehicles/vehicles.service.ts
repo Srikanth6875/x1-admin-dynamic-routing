@@ -1,5 +1,5 @@
-import { FrameWorkAppService } from "~/__clarity-admin/freame-work/frame-work-app";
-import { TABLE_NAMES } from "~/__shared-constants/contstants";
+import { FrameWorkAppService } from "~/clarity-admin/freame-work/frame-work-app";
+import { TABLE_NAMES } from "~/shared-constants/contstants";
 import { VEHICLE_COLUMNS_CONFIG, VEHICLE_TABLE_CONFIG } from "./vehicles-settings";
 
 export class VehicleService extends FrameWorkAppService {

@@ -1,6 +1,6 @@
-import { ReflectionRegistry } from "~/__runner-engine/reflection-registry.service";
-import { AuthService } from "~/__auth/auth-app.service";
-import type { PermissionExecuteArgs } from "~/__shared-constants/core-listing-types";
+import { ReflectionRegistry } from "~/runner-engine/reflection-registry.service";
+import { AuthService } from "~/auth/auth-app.service";
+import type { PermissionExecuteArgs } from "~/shared-constants/core-listing-types";
 
 async function getUserExecutionPermission(userId: number, appType: string, runType?: string) {
   const auth = new AuthService();

@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { redirect } from "react-router";
-import { getSession } from "~/__auth/auth-session.service";
+import { getSession } from "~/auth/auth-session.service";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request);

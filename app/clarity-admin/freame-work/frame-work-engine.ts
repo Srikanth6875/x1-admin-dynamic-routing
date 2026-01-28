@@ -1,5 +1,5 @@
 import type { Knex } from "knex";
-import { getShellEngine } from "~/__database/pg-connector.server";
+import { getShellEngine } from "~/database/pg-connector.server";
 export abstract class ShellEngine {
     protected readonly sql_query: Knex;
     protected constructor() {

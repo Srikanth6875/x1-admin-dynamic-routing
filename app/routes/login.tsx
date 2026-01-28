@@ -1,8 +1,8 @@
 import { useActionData, redirect } from "react-router";
 import type { ActionFunction, LoaderFunction } from "react-router";
-import { AuthService } from "~/__auth/auth-app.service";
-import { createUserSession, getSession } from "~/__auth/auth-session.service";
-import { LoginForm } from "~/__components/LoginCard";
+import { AuthService } from "~/auth/auth-app.service";
+import { createUserSession, getSession } from "~/auth/auth-session.service";
+import { LoginForm } from "~/components/LoginCard";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request);

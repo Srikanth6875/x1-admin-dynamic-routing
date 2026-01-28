@@ -1,5 +1,5 @@
-import { FrameWorkAppService } from "~/__clarity-admin/freame-work/frame-work-app";
-import { TABLE_NAMES } from "~/__shared-constants/contstants";
+import { FrameWorkAppService } from "~/clarity-admin/freame-work/frame-work-app";
+import { TABLE_NAMES } from "~/shared-constants/contstants";
 import { BODY_TYPE_COLUMNS_CONFIG, BODY_TYPE_TABLE_CONFIG, COLORS_COLUMNS_CONFIG, COLORS_TABLE_CONFIG, YEAR_COLUMNS_CONFIG, YEAR_TABLE_CONFIG } from "./veh-ybr-settings";
 
 export class VehicleYearBodyColorService extends FrameWorkAppService {

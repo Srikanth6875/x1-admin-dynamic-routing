@@ -1,9 +1,9 @@
 import { redirect, useLoaderData } from "react-router";
 import type { LoaderFunctionArgs } from "react-router";
-import { requireUserSession } from "~/__auth/auth-session.service";
-import { executeWithPermission } from "~/__runner-engine/reflection-executor.server";
-import { FrameworkRenderer } from "~/__clarity-admin/framework-renderer";
-import type { ListingLoaderData } from "~/__shared-constants/core-listing-types";
+import { requireUserSession } from "~/auth/auth-session.service";
+import { executeWithPermission } from "~/runner-engine/reflection-executor.server";
+import { FrameworkRenderer } from "~/clarity-admin/framework-renderer";
+import type { ListingLoaderData } from "~/shared-constants/core-listing-types";
 
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

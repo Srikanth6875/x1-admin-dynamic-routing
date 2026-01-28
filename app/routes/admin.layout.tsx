@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Outlet, useLocation, redirect, type LoaderFunctionArgs, useNavigation, useRouteError, } from "react-router";
-import { AppHeader } from "~/__components/admin/AppHeader";
-import { AppSidebar } from "~/__components/admin/AppSidebar";
-import { requireUserSession } from "~/__auth/auth-session.service";
+import { AppHeader } from "~/components/admin/AppHeader";
+import { AppSidebar } from "~/components/admin/AppSidebar";
+import { requireUserSession } from "~/auth/auth-session.service";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {

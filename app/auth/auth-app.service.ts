@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import { ShellEngine } from "~/__clarity-admin/freame-work/frame-work-engine";
-import { TABLE_NAMES } from "~/__shared-constants/contstants";
+import { ShellEngine } from "~/clarity-admin/freame-work/frame-work-engine";
+import { TABLE_NAMES } from "~/shared-constants/contstants";
 export interface User {
   id: number;
   username: string;

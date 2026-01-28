@@ -1,5 +1,5 @@
-import { FrameWorkAppService } from "~/__clarity-admin/freame-work/frame-work-app";
-import { TABLE_NAMES } from "~/__shared-constants/contstants";
+import { FrameWorkAppService } from "~/clarity-admin/freame-work/frame-work-app";
+import { TABLE_NAMES } from "~/shared-constants/contstants";
 import { MAKE_TABLE_CONFIG, MAKE_COLUMNS_CONFIG, MODEL_COLUMNS_CONFIG, MODEL_TABLE_CONFIG, TRIM_COLUMNS_CONFIG, TRIM_TABLE_CONFIG } from "./veh-mmt-settings";
 
 export class VehicleMakeModelTrimService extends FrameWorkAppService {

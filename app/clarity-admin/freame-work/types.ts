@@ -1,4 +1,4 @@
-import { UIComponentType } from "~/__shared-constants/ui.enums";
+import { UIComponentType } from "~/shared-constants/ui.enums";
 export interface TablePayload {
   data: any[];
   columns: any[];

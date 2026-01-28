@@ -1,6 +1,6 @@
 import React from "react";
 import { DataTable } from "@codeJ09/data-table";
-import { UIComponentType } from "~/__shared-constants/ui.enums";
+import { UIComponentType } from "~/shared-constants/ui.enums";
 import type { FrameWorkRendererProps, TablePayload } from "./freame-work/types";
 
 // Map UI component types to React components
