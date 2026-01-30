@@ -1,5 +1,9 @@
 export const RESELLER_TABLE_CONFIG = {
   features: {
+    pagination: {
+      pageSize: 20,
+      pageSizeOptions: [50, 100, 750, 1000],
+    },
     search: {
       placeholder: "Search Rooftops...",
     },

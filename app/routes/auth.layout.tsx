@@ -14,7 +14,9 @@ export function ErrorBoundary() {
   if (isRouteErrorResponse(error)) {
     return (
       <div style={{ padding: 40 }}>
-        <h1>{error.status} - {error.statusText}</h1>
+        <h1>
+          {error.status} - {error.statusText}
+        </h1>
         <pre>{JSON.stringify(error.data, null, 2)}</pre>
       </div>
     );

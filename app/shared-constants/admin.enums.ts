@@ -1,3 +1,3 @@
 export enum UIComponentType {
-    TABLE = "TABLE",
+  TABLE = "TABLE",
 }

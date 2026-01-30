@@ -32,8 +32,10 @@ export function AppHeader({ onToggleSidebar, items }: AppHeaderProps) {
       <div className="flex items-center gap-4">
         <h1 className="text-lg font-semibold ml-[80px]">X1</h1>
 
-        <button onClick={onToggleSidebar}
-          className="p-2 rounded-md hover:bg-[oklch(28%_0.02_260)] transition-colors">
+        <button
+          onClick={onToggleSidebar}
+          className="p-2 rounded-md hover:bg-[oklch(28%_0.02_260)] transition-colors"
+        >
           ☰
         </button>
 
@@ -53,7 +55,8 @@ export function AppHeader({ onToggleSidebar, items }: AppHeaderProps) {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setOpen((p) => !p)}
-          className="w-8 h-8 rounded-full bg-[oklch(30%_0.02_260)] flex items-center justify-center font-semibold">
+          className="w-8 h-8 rounded-full bg-[oklch(30%_0.02_260)] flex items-center justify-center font-semibold"
+        >
           A
         </button>
 
@@ -66,7 +69,9 @@ export function AppHeader({ onToggleSidebar, items }: AppHeaderProps) {
 
             <div className="mt-auto">
               <Form method="post" action="/logout">
-                <button type="submit" className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                <button
+                  type="submit"
+                  className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
                 >
                   Logout
                 </button>

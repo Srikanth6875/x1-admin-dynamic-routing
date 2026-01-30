@@ -6,5 +6,5 @@ export interface TablePayload {
   table_header?: string;
 }
 
-export type RenderResult = | { type: UIComponentType.TABLE; payload: TablePayload; };
-export type FrameWorkRendererProps = { render: RenderResult; };
+export type RenderResult = { type: UIComponentType.TABLE; payload: TablePayload };
+export type FrameWorkRendererProps = { render: RenderResult };

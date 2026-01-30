@@ -13,9 +13,7 @@ export default [
   {
     path: "/list",
     file: "routes/admin.layout.tsx",
-    children: [
-      route(":app-type/:run-type", "routes/admin.listing.tsx"),
-    ],
+    children: [route(":app-type/:run-type", "routes/admin.listing.tsx")],
   },
   route("*", "routes/not-found.tsx"),
 ] satisfies RouteConfig;

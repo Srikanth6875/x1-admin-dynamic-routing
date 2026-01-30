@@ -66,7 +66,6 @@ export async function requireUserSession(request: Request) {
     });
   }
 
-
   // User logged in but idle too long → destroy session
   if (lastActivity && now - lastActivity > SESSION_TIMEOUT_MS) {
     throw redirect("/login", {

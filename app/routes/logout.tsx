@@ -7,5 +7,5 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Logout() {
-  return  null; // no UI
+  return null; // no UI
 }

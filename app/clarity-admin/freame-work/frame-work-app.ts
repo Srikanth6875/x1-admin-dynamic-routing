@@ -4,13 +4,17 @@ import type { RenderResult } from "./types";
 import { UIComponentType } from "~/shared-constants/admin.enums";
 
 export abstract class FrameWorkAppService extends ShellEngine {
-  protected async buildTable({ query, columns, configOverrides = {}, table_header, }: {
+  protected async buildTable({
+    query,
+    columns,
+    configOverrides = {},
+    table_header,
+  }: {
     query: any;
     columns: any[];
     configOverrides?: Record<string, any>;
     table_header?: string;
   }): Promise<RenderResult> {
-
     const data = await this.executeQuery(query);
 
     return {

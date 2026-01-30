@@ -29,4 +29,3 @@ export function getShellEngine(): Knex {
   }
   return knexInstance;
 }
-

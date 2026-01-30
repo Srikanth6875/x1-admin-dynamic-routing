@@ -13,18 +13,19 @@ type AppSidebarProps = {
   items: SidebarItem[];
 };
 
-export function AppSidebar({ sidebarOpen, isMobile, onClose, items, }: AppSidebarProps) {
+export function AppSidebar({ sidebarOpen, isMobile, onClose, items }: AppSidebarProps) {
   const { appType, runType } = useParams();
 
   return (
     <>
-      <aside className={`fixed top-12 left-0 bottom-0 w-56 bg-white shadow-xl z-40 transition-transform duration-300
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside
+        className={`fixed top-12 left-0 bottom-0 w-56 bg-white shadow-xl z-40 transition-transform duration-300
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
         <div className="h-full p-6">
           <nav className="space-y-1">
             {items.map((item) => {
-              const isActive =
-                item.appType === appType && item.runType === runType;
+              const isActive = item.appType === appType && item.runType === runType;
 
               return (
                 <Link
@@ -43,10 +44,7 @@ export function AppSidebar({ sidebarOpen, isMobile, onClose, items, }: AppSideba
       </aside>
 
       {sidebarOpen && isMobile && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30"
-          onClick={onClose}
-        />
+        <div className="fixed inset-0 bg-black/50 z-30" onClick={onClose} />
       )}
     </>
   );

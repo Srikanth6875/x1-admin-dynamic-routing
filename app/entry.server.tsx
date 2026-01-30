@@ -8,7 +8,12 @@ import "./runner-engine/reflection-registry.service";
 
 const ABORT_DELAY = 5000;
 
-export default function handleRequest(request: Request, responseStatusCode: number, responseHeaders: Headers, routerContext: EntryContext) {
+export default function handleRequest(
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  routerContext: EntryContext,
+) {
   const isBot = isbot(request.headers.get("user-agent") ?? "");
   return new Promise<Response>((resolve) => {
     let didError = false;
@@ -33,7 +38,7 @@ export default function handleRequest(request: Request, responseStatusCode: numb
             new Response(stream, {
               status: didError ? 500 : responseStatusCode,
               headers: responseHeaders,
-            })
+            }),
           );
           pipe(body);
         },
@@ -52,7 +57,7 @@ export default function handleRequest(request: Request, responseStatusCode: numb
             new Response(stream, {
               status: didError ? 500 : responseStatusCode,
               headers: responseHeaders,
-            })
+            }),
           );
           pipe(body);
         },
@@ -63,7 +68,7 @@ export default function handleRequest(request: Request, responseStatusCode: numb
             new Response("Internal Server Error", {
               status: 500,
               headers: responseHeaders,
-            })
+            }),
           );
         },
 
@@ -71,7 +76,7 @@ export default function handleRequest(request: Request, responseStatusCode: numb
           didError = true;
           console.error(err);
         },
-      }
+      },
     );
     setTimeout(abort, ABORT_DELAY);
   });

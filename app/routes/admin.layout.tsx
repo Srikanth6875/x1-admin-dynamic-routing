@@ -1,8 +1,16 @@
 import { useState, useEffect } from "react";
-import { Outlet, useLocation, redirect, type LoaderFunctionArgs, useNavigation, useRouteError, } from "react-router";
+import {
+  Outlet,
+  useLocation,
+  redirect,
+  type LoaderFunctionArgs,
+  useNavigation,
+  useRouteError,
+} from "react-router";
 import { AppHeader } from "~/components/admin/AppHeader";
 import { AppSidebar } from "~/components/admin/AppSidebar";
 import { requireUserSession } from "~/auth/auth-session.service";
+import { sidebarItems, topNavItems } from "~/constants/admin.constants";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
@@ -12,20 +20,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw redirect("/login");
   }
 }
-
-export const topNavItems = [
-  { name: "rooftops", appType: "ROOFTOPS", runType: "GET_ROOFTOPS" },
-  { name: "Vehicles", appType: "VEHICLES", runType: "VEHICLE_LIST" },
-];
-
-export const sidebarItems = [
-  { name: "Makes", appType: "VEH_INFO", runType: "GET_MAKES" },
-  { name: "Model", appType: "VEH_INFO", runType: "MODEL_LIST" },
-  { name: "Trim", appType: "VEH_INFO", runType: "VEH_TRIMS" },
-  { name: "Years", appType: "VEH_INFO", runType: "YEAR_LIST" },
-  { name: "Body Types", appType: "VEH_INFO", runType: "BODY_TYPES" },
-  { name: "Int/Ext Colors", appType: "VEH_INFO", runType: "VEH_COLORS" },
-];
 
 export default function AppLayout() {
   const location = useLocation();
@@ -47,10 +41,7 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AppHeader
-        onToggleSidebar={() => setSidebarOpen((p) => !p)}
-        items={topNavItems}
-      />
+      <AppHeader onToggleSidebar={() => setSidebarOpen((p) => !p)} items={topNavItems} />
 
       {isLoading && (
         <div className="fixed top-12 left-0 z-30 h-1 w-full overflow-hidden bg-[oklch(64.5%_0.246_16.439_/_0.25)]">
