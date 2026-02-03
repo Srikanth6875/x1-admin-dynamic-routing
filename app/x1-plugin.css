@@ -1,0 +1,6 @@
+/* @import "tailwindcss"; */
+@import "@codeJ09/design-system-core/tokens";
+
+@source "../node_modules/@codeJ09/design-system-core/src/**/*.{ts,tsx}";
+@source "../node_modules/@codeJ09/data-table/src/**/*.{ts,tsx}";
+@source "../node_modules/@codeJ09/form/src/**/*.{ts,tsx}";
