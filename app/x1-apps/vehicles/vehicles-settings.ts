@@ -1,3 +1,5 @@
+import { ColumnMetadata } from "@codeJ09/data-table";
+
 export const VEHICLE_TABLE_CONFIG = {
   features: {
     pagination: {
@@ -10,7 +12,7 @@ export const VEHICLE_TABLE_CONFIG = {
   },
 };
 
-export const VEHICLE_COLUMNS_CONFIG = [
+export const VEHICLE_COLUMNS_CONFIG: ColumnMetadata[] = [
   { key: "veh_id", label: "ID", type: "number" },
   { key: "veh_vin", label: "Vin", type: "string" },
   { key: "veh_stock", label: "Stock", type: "string" },
@@ -25,5 +27,5 @@ export const VEHICLE_COLUMNS_CONFIG = [
   { key: "body_type", label: "Body", type: "string" },
   { key: "exterior_color", label: "Ext col", type: "string" },
   { key: "interior_color", label: "Int col", type: "string" },
-  { key: "veh_ctime", label: "Create", type: "Date" },
+  { key: "veh_ctime", label: "Create", type: "string" },
 ];

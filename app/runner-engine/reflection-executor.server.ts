@@ -1,10 +1,8 @@
 import { ReflectionRegistry } from "~/runner-engine/reflection-registry.service";
 import { AuthService } from "~/auth/auth-app.service";
 import type { PermissionExecuteArgs } from "~/shared-constants/core-listing-types";
-type Permission = {
-  class_Name: string;
-  class_Method_Name: string;
-} | null;
+
+type Permission = { class_Name: string; class_Method_Name: string; } | null;
 
 async function getUserExecutionPermission(userId: number, appType: string, runType?: string) {
   const auth = new AuthService();
@@ -24,14 +22,14 @@ function assertPermission(permission: Permission) {
   return { class_Name, class_Method_Name };
 }
 
-async function executeReflection(className: string, methodName: string, payload: unknown[]) {
-  return ReflectionRegistry.executeReflectionEngine(className, methodName, payload);
+async function executeReflection(className: string, methodName: string) {
+  return ReflectionRegistry.executeReflectionEngine(className, methodName);
 }
 
-export async function executeWithPermission({ userId, app_type, run_type, payload = [], }: PermissionExecuteArgs) {
+export async function executeWithPermission({ userId, app_type, run_type }: PermissionExecuteArgs) {
 
   const permission = await getUserExecutionPermission(Number(userId), app_type, run_type);
   const { class_Name, class_Method_Name } = assertPermission(permission);
 
-  return executeReflection(class_Name, class_Method_Name, payload);
+  return executeReflection(class_Name, class_Method_Name);
 }

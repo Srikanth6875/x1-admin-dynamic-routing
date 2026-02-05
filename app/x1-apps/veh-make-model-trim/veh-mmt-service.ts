@@ -1,10 +1,7 @@
 import { FrameWorkAppService } from "~/clarity-admin/freame-work/frame-work-app";
-import { TABLE_NAMES } from "~/shared-constants/contstants";
+import { CLARITY_DATA_TABLE_UNIQUE_IDS, TABLE_NAMES } from "~/shared-constants/contstants";
 import {
-  MAKES_TABLE_CONFIG,
-  MAKES_COLUMNS_CONFIG,
-  MODEL_COLUMNS_CONFIG,
-  MODEL_TABLE_CONFIG,
+  MAKES_TABLE_CONFIG, MAKES_COLUMNS_CONFIG, MODEL_COLUMNS_CONFIG, MODEL_TABLE_CONFIG,
   TRIM_COLUMNS_CONFIG,
   TRIM_TABLE_CONFIG,
 } from "./veh-mmt-settings";
@@ -12,17 +9,12 @@ import { UIComponentType } from "~/shared-constants/admin.enums";
 
 export class VehicleMakeModelTrimService extends FrameWorkAppService {
   async MakeList() {
-    const query = this.sql_query(TABLE_NAMES.VEHICLE_MAKE).select(
-      "id",
-      "make",
-      "make_ctime",
-      "make_mtime",
-    );
+    const query = this.sql_query(TABLE_NAMES.VEHICLE_MAKE).select("id", "make", "make_ctime", "make_mtime",);
 
-    return await this.buildDataTable({
+    return await this.BuildClarifyDataTable({
       query: query,
-      type: UIComponentType.TABLE,
-      table_unique_id: TABLE_NAMES.VEHICLE_MAKE,
+      component_type: UIComponentType.TABLE,
+      table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MAKES,
       columns: MAKES_COLUMNS_CONFIG,
       configOverrides: MAKES_TABLE_CONFIG,
       table_header: "Vehicle Makes",
@@ -34,10 +26,10 @@ export class VehicleMakeModelTrimService extends FrameWorkAppService {
       .select("vm.id", "mk.make as make", "vm.model", "vm.model_ctime", "vm.model_mtime")
       .leftJoin({ mk: TABLE_NAMES.VEHICLE_MAKE }, "mk.id", "vm.make_id");
 
-    return await this.buildDataTable({
+    return await this.BuildClarifyDataTable({
       query,
-      type: UIComponentType.TABLE,
-      table_unique_id: TABLE_NAMES.VEHICLE_MODEL,
+      component_type: UIComponentType.TABLE,
+      table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MODELS,
       columns: MODEL_COLUMNS_CONFIG,
       configOverrides: MODEL_TABLE_CONFIG,
       table_header: "Vehicle Models",
@@ -57,10 +49,10 @@ export class VehicleMakeModelTrimService extends FrameWorkAppService {
       .leftJoin({ mk: TABLE_NAMES.VEHICLE_MAKE }, "mk.id", "vt.make_id")
       .leftJoin({ vm: TABLE_NAMES.VEHICLE_MODEL }, "vm.id", "vt.model_id");
 
-    return await this.buildDataTable({
+    return await this.BuildClarifyDataTable({
       query,
-      type: UIComponentType.TABLE,
-      table_unique_id: TABLE_NAMES.VEHICLE_TRIM,
+      component_type: UIComponentType.TABLE,
+      table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_TRIMS,
       columns: TRIM_COLUMNS_CONFIG,
       configOverrides: TRIM_TABLE_CONFIG,
       table_header: "Vehicle Trims",

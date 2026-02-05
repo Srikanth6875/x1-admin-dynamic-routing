@@ -1,3 +1,4 @@
+import { ColumnMetadata } from "@codeJ09/data-table";
 import { UIComponentType } from "~/shared-constants/admin.enums";
 
 export type TableHeaderAction = {
@@ -9,20 +10,20 @@ export type TableHeaderAction = {
 };
 
 export interface TablePayload {
-  data: any[];
-  columns: any[];
-  config: Record<string, any>;
+  data: unknown[];
+  columns: ColumnMetadata[];
+  config: Record<string, unknown>;
   table_unique_id: string;
   table_header?: string;
   header_actions?: TableHeaderAction[];
 }
 
 export type TableRender = {
-  type: UIComponentType.TABLE;
+  component_type: UIComponentType.TABLE;
   payload: TablePayload;
 };
-
 export type RenderResult = TableRender;
+
 export type FrameWorkRendererProps = { render: RenderResult };
 
 

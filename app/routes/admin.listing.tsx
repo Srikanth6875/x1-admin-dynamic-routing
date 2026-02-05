@@ -6,7 +6,7 @@ import { FrameworkRenderer } from "~/clarity-admin/framework-renderer";
 import type { ListingLoaderData } from "~/shared-constants/core-listing-types";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { userId, headers } = await requireUserSession(request).catch(() => {
+  const { userId, sessionId, headers } = await requireUserSession(request).catch(() => {
     throw redirect("/login");
   });
 
@@ -16,19 +16,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   if (!appType || !runType) {
     throw new Response("Missing parameters", { status: 400 });
   }
-  const render_response = await executeWithPermission({
-    userId,
-    app_type: appType,
-    run_type: runType,
-  });
+  const render_response = await executeWithPermission({ userId, app_type: appType, run_type: runType, });
 
-  return new Response(JSON.stringify({ render_response, appType, runType }), {
+  return new Response(JSON.stringify({ render_response }), {
     headers: {
       "Content-Type": "application/json",
       ...headers,
     },
   });
-};
+}
 
 export default function AdminDynamicRoute() {
   const { render_response } = useLoaderData<ListingLoaderData>();

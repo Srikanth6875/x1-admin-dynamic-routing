@@ -1,3 +1,5 @@
 import "dotenv/config";
 
-export const getTrimEnv = (key: string, fallback = ""): string => (process.env[key] ?? fallback).trim();
+export function getTrimEnvKey(key: string, fallback = ""): string {
+    return (process.env[key] ?? fallback).trim();
+}

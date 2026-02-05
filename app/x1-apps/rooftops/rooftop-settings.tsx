@@ -1,3 +1,4 @@
+import { ColumnMetadata } from "@codeJ09/data-table";
 import { TableHeaderAction } from "~/clarity-admin/frame-work-types";
 export const ROOFTOP_TABLE_HEADING = "Rooftops";
 
@@ -13,7 +14,7 @@ export const ROOFTOP_TABLE_CONFIG = {
   },
 };
 
-export const ROOFTOP_COLUMNS_CONFIG = [
+export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
   { key: "rt_dealer_id", label: "Rooftop ID", type: "string" },
   { key: "rt_name", label: "Roof Top Name", type: "string" },
   { key: "rt_street", label: "Street", type: "string" },
@@ -31,4 +32,11 @@ export const ROOFTOP_TABLE_ACTIONS: TableHeaderAction[] = [
     runType: "ADD_ROOFTOP",
     params: { mode: "create" },
   },
+   {
+    btn_label: "Edit Rooftop",
+    btn_variant: "primary",
+    appType: "VEH_INFO",
+    runType: "ADD_ROOFTOP",
+    params: { mode: "create" },
+  }
 ];

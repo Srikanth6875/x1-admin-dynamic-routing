@@ -1,6 +1,8 @@
 export const topNavItems = [
   { name: "rooftops", appType: "ROOFTOPS", runType: "GET_ROOFTOPS" },
   { name: "Vehicles", appType: "VEHICLES", runType: "VEHICLE_LIST" },
+  { name: "Import Jobs", appType: "IMPORT_JOBS", runType: "IMPORT_JOB_LIST" },
+  { name: "Import File Jobs", appType: "IMPORT_JOBS", runType: "IMPORT_FILE_JOB_LIST" },
 ];
 
 export const sidebarItems = [
@@ -31,3 +33,17 @@ export const MONGO_COLLECTIONS = {
   VEHICLE_DESCRIPTION: "vehicle_descriptions",
   VEHICLE_OPTIONS: "vehicle_options",
 };
+
+
+export const CLARITY_DATA_TABLE_UNIQUE_IDS = {
+  ROOFTOP: "rooftop_data_table",
+  VEHICLES: "vehicles_data_table",
+  IMPORT_JOBS: "import_jobs_data_table",
+  IMPORT_FILE_JOBS: "import_file_jobs_data_table",
+  VEHICLE_MAKES: "vehicle_makes_data_table",
+  VEHICLE_MODELS: "vehicle_models_data_table",
+  VEHICLE_TRIMS: "vehicle_trims_data_table",
+  VEHICLE_YEARS: "vehicle_years_data_table",
+  VEHICLE_BODY_TYPES: "vehicle_body_types_data_table",
+  VEHICLE_COLORS: "vehicle_colors_data_table",
+}

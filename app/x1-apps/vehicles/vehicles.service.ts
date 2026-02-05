@@ -1,5 +1,5 @@
 import { FrameWorkAppService } from "~/clarity-admin/freame-work/frame-work-app";
-import { TABLE_NAMES } from "~/shared-constants/contstants";
+import { CLARITY_DATA_TABLE_UNIQUE_IDS, TABLE_NAMES } from "~/shared-constants/contstants";
 import { VEHICLE_COLUMNS_CONFIG, VEHICLE_TABLE_CONFIG } from "./vehicles-settings";
 import { UIComponentType } from "~/shared-constants/admin.enums";
 
@@ -32,10 +32,10 @@ export class VehicleService extends FrameWorkAppService {
       ])
       .whereNull("v.veh_dtime");
 
-    return this.buildDataTable({
+    return this.BuildClarifyDataTable({
       query,
-      type: UIComponentType.TABLE,
-      table_unique_id: TABLE_NAMES.VEHICLES,
+      component_type: UIComponentType.TABLE,
+      table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLES,
       columns: VEHICLE_COLUMNS_CONFIG,
       configOverrides: VEHICLE_TABLE_CONFIG,
       table_header: "Vehicles List",

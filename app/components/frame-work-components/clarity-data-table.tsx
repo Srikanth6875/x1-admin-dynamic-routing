@@ -6,7 +6,7 @@ type TableComponentProps = {
   payload: TablePayload;
 };
 
-export const SimpleDataTable: React.FC<TableComponentProps> = ({ payload }) => {
+export const ClarityDataTable: React.FC<TableComponentProps> = ({ payload }) => {
   const { table_header, data, table_unique_id, columns, config, header_actions = [] } = payload;
 
   const buildLink = (action: (typeof header_actions)[number]) => {
@@ -55,3 +55,4 @@ export const SimpleDataTable: React.FC<TableComponentProps> = ({ payload }) => {
     </section>
   );
 };
+

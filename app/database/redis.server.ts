@@ -1,17 +1,15 @@
 import { createClient } from "redis";
-import { getTrimEnv } from "~/utils/get-env-helper";
+import { getTrimEnvKey } from "~/utils/get-env-helper";
 
 export const redis = createClient({
   socket: {
-    host: getTrimEnv("REDIS_HOST"),
-    port: Number(getTrimEnv("REDIS_PORT", "6379")),
+    host: getTrimEnvKey("REDIS_HOST"),
+    port: Number(getTrimEnvKey("REDIS_PORT", "6379")),
   },
-  password: getTrimEnv("REDIS_PASSWORD"),
+  password: getTrimEnvKey("REDIS_PASSWORD"),
 });
 
-redis.on("error", (err) => console.error("Redis connection error:", err));
-// redis.on("connect", () => console.log("Redis socket connected"));
-// redis.on("ready", () => console.log("Redis connection established and ready"));
+redis.on("error", (err: any) => console.error("Redis connection error:", err));
 
 if (!redis.isOpen) {
   try {

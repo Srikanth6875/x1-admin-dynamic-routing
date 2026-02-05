@@ -1,13 +1,14 @@
 import { redirect } from "react-router";
 import { generateSessionUUID } from "~/utils/guid-helper";
-import { setSessionDataInServer, getSessionDataInServer, deleteSessionInServer, getSessionIdFromRequest, commitSessionCookie, destroySessionCookie, SESSION_TIMEOUT_MS, } from "./user-session-server";
+import { setSessionDataInRedis, getSessionDataInRedis, deleteSessionInRedis, getSessionIdFromRequest, commitSessionCookie, destroySessionCookie, SESSION_TIMEOUT_MS, } from "./user-session-server";
+import { getRequestContext } from "~/server/session-id-context";
 
 /** Get full session (id + data) */
 export async function getSession(request: Request) {
   const sessionId = await getSessionIdFromRequest(request);
   if (!sessionId) return null;
 
-  const data = await getSessionDataInServer(sessionId);
+  const data = await getSessionDataInRedis(sessionId);
   if (!data) return null;
 
   return { sessionId, data };
@@ -21,7 +22,7 @@ export async function createUserSession(userId: number, userName: string, redire
     userName,
     lastActivity: Date.now(),
   };
-  await setSessionDataInServer(sessionId, sessionData);
+  await setSessionDataInRedis(sessionId, sessionData);
 
   return redirect(redirectTo, {
     headers: {
@@ -40,7 +41,7 @@ export async function requireUserSession(request: Request) {
 
   // Expired
   if (!lastActivity || now - lastActivity > SESSION_TIMEOUT_MS) {
-    await deleteSessionInServer(sessionId);
+    await deleteSessionInRedis(sessionId);
 
     throw redirect("/login", {
       headers: {
@@ -48,14 +49,13 @@ export async function requireUserSession(request: Request) {
       },
     });
   }
-
   // Refresh TTL + last activity
   const updatedData = { userId, userName, lastActivity: now };
-  await setSessionDataInServer(sessionId, updatedData);
+  await setSessionDataInRedis(sessionId, updatedData);
 
   return {
     userId,
-    userName,
+    sessionId,
     headers: {
       "Set-Cookie": await commitSessionCookie(sessionId),
     },
@@ -65,7 +65,7 @@ export async function requireUserSession(request: Request) {
 /** Logout user */
 export async function logoutSession(request: Request) {
   const sessionId = await getSessionIdFromRequest(request);
-  if (sessionId) await deleteSessionInServer(sessionId);
+  if (sessionId) await deleteSessionInRedis(sessionId);
 
   return redirect("/login", {
     headers: {
@@ -73,12 +73,3 @@ export async function logoutSession(request: Request) {
     },
   });
 }
-
-/*
-export async function getSessionValue<T = unknown>(request: Request, key: string): Promise<T | null> {
-  const session = await getSession(request);
-  if (!session) return null;
-
-  const value = session.data?.[key as keyof typeof session.data];
-  return (value as T) ?? null;
-}*/

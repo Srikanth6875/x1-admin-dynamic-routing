@@ -1,47 +1,63 @@
 import type { Config } from "jest";
 
-const config: Config = {
+const baseTsJest = {
   preset: "ts-jest/presets/default-esm",
-  testEnvironment: "node",
-  extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
     "^~/(.*)$": "<rootDir>/app/$1",
   },
   transform: {
-    "^.+\\.ts$": [
+    "^.+\\.(ts|tsx)$": [
       "ts-jest",
-      {
-        useESM: true,
-        tsconfig: "tsconfig.json",
-      },
+      { useESM: true, tsconfig: "tsconfig.json" },
     ],
   },
-  testMatch: ["**/*.test.ts"],
-  testPathIgnorePatterns: ["/node_modules/", "/build/"],
-  clearMocks: true,
+};
 
-  coverageDirectory: "coverage", //Coverage output
+const config: Config = {
+  projects: [
+    {
+      ...baseTsJest,
+      displayName: "node",
+      testEnvironment: "node",
+      extensionsToTreatAsEsm: [".ts"],
+      testMatch: ["**/?(*.)+(test|spec).ts"],
+    },
+    {
+      ...baseTsJest,
+      displayName: "js-dom",
+      testEnvironment: "jsdom",
+      extensionsToTreatAsEsm: [".ts", ".tsx"],
+      setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+      testMatch: ["**/?(*.)+(test|spec).tsx"],
+    },
+  ],
+
+  //Coverage must be controlled ONLY here
+  collectCoverageFrom: [
+    "app/**/*.{ts,tsx}",
+
+    //never measure tests
+    "!app/**/*.test.{ts,tsx}",
+
+    //settings / constants / enums
+    "!app/**/settings.{ts,tsx}",
+    "!app/shared-constants/**",
+
+    //framework & infra
+    "!app/clarity-admin/freame-work/**",
+    "!app/database/**",
+    "!app/utils/**",
+    "!app/server/**",
+
+    //app shell / router bootstrapping
+    "!app/entry.client.tsx",
+    "!app/entry.server.tsx",
+    "!app/root.tsx",
+    "!app/routes/**",
+  ],
+
+  coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html"],
-
-  collectCoverageFrom: [  // ONLY measure business/app layer
-    "app/x1-apps/**/*.ts",
-    "!app/**/*.test.ts",
-    "!app/**/settings.ts",
-    "!app/**/settings.tsx",
-  ],
-
-  //Explicitly ignore framework & infra
-  coveragePathIgnorePatterns: [
-    "/node_modules/",
-    "/build/",
-    "/coverage/",
-    "/app/clarity-admin/",
-    "/app/database/",
-    "/app/runner-engine/",
-    "/app/shared-constants/",
-    "/app/utils/",
-    "/app/auth/",
-  ],
 };
 
 export default config;

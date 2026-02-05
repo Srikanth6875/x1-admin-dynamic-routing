@@ -1,10 +1,10 @@
-import { UiComponentMap } from "./frame-work-registery";
+import { UiComponentMap } from "~/clarity-admin/frame-work-registery";
 import { FrameWorkRendererProps } from "./frame-work-types";
 
 export function FrameworkRenderer({ render }: FrameWorkRendererProps) {
 
-  const Component = UiComponentMap[render.type];
+  const Component = UiComponentMap[render.component_type];
   if (!Component) return null;
 
-  return Component ? <Component payload={render.payload as any} /> : null;
+  return Component ? <Component payload={render.payload} /> : null;
 }
