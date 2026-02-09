@@ -6,10 +6,10 @@ import { UIComponentType } from "~/shared/admin.enums";
 
 export class VehicleMakeModelTrimService extends FrameWorkAppService {
   async MakeList() {
-    const query = this.sql_query(TABLE_NAMES.VEHICLE_MAKE).select("id", "make", "make_ctime", "make_mtime",);
+    const sqlQuery = this.query(TABLE_NAMES.VEHICLE_MAKE).select("id", "make", "make_ctime", "make_mtime",);
 
     return await this.BuildClarifyDataTable({
-      query: query,
+      sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MAKES,
       columns: MAKES_COLUMNS_CONFIG,
       configOverrides: MAKES_TABLE_CONFIG,
@@ -19,12 +19,12 @@ export class VehicleMakeModelTrimService extends FrameWorkAppService {
   }
 
   async ModelList() {
-    const query = this.sql_query({ vm: TABLE_NAMES.VEHICLE_MODEL })
+    const sqlQuery = this.query({ vm: TABLE_NAMES.VEHICLE_MODEL })
       .select("vm.id", "mk.make as make", "vm.model", "vm.model_ctime", "vm.model_mtime")
       .leftJoin({ mk: TABLE_NAMES.VEHICLE_MAKE }, "mk.id", "vm.make_id");
 
     return await this.BuildClarifyDataTable({
-      query,
+      sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MODELS,
       columns: MODEL_COLUMNS_CONFIG,
       configOverrides: MODEL_TABLE_CONFIG,
@@ -34,7 +34,7 @@ export class VehicleMakeModelTrimService extends FrameWorkAppService {
   }
 
   async VehicleTrimList() {
-    const query = this.sql_query({ vt: TABLE_NAMES.VEHICLE_TRIM })
+    const sqlQuery = this.query({ vt: TABLE_NAMES.VEHICLE_TRIM })
       .select(
         "vt.id",
         "mk.make as make",
@@ -47,7 +47,7 @@ export class VehicleMakeModelTrimService extends FrameWorkAppService {
       .leftJoin({ vm: TABLE_NAMES.VEHICLE_MODEL }, "vm.id", "vt.model_id");
 
     return await this.BuildClarifyDataTable({
-      query,
+      sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_TRIMS,
       columns: TRIM_COLUMNS_CONFIG,
       configOverrides: TRIM_TABLE_CONFIG,

@@ -1,4 +1,4 @@
-import { getTrimEnvKey } from "~/shared/util-helper";
+import { getEnvKey } from "~/shared/util-helper";
 
 /* -------------------------------------------------------
  * Reflection Registry – DEV reload / PROD singleton
@@ -10,7 +10,7 @@ class ReflectionService {
   private initialized = false;
 
   async runEngine(): Promise<void> {
-    const isDev = getTrimEnvKey("NODE_ENV") === "development";
+    const isDev = getEnvKey("NODE_ENV") === "development";
 
     if (!isDev && this.initialized) return;
     this.ReflectionClasses.clear();
@@ -84,7 +84,7 @@ declare global {
   var __ReflectionRegistry__: ReflectionService | undefined;
 }
 
-const isDev = getTrimEnvKey("NODE_ENV") === "development";
+const isDev = getEnvKey("NODE_ENV") === "development";
 
 export const ReflectionRegistry: ReflectionService = isDev
   ? new ReflectionService() // new instance every reload

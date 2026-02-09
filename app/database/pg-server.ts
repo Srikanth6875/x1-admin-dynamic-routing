@@ -1,17 +1,17 @@
 import knexInit from "knex";
 import type { Knex } from "knex";
-import { getTrimEnvKey } from "~/shared/util-helper";
+import { getEnvKey } from "~/shared/util-helper";
 let knexInstance: Knex | undefined;
 
 function CreatePgConnection(): Knex {
   return knexInit({
     client: "pg",
     connection: {
-      host: getTrimEnvKey("DB_HOST"),
-      port: Number(getTrimEnvKey("DB_PORT", "5432")),
-      user: getTrimEnvKey("DB_USER"),
-      password: getTrimEnvKey("DB_PASSWORD"),
-      database: getTrimEnvKey("DB_NAME"),
+      host: getEnvKey("DB_HOST"),
+      port: Number(getEnvKey("DB_PORT", "5432")),
+      user: getEnvKey("DB_USER"),
+      password: getEnvKey("DB_PASSWORD"),
+      database: getEnvKey("DB_NAME"),
       keepAlive: true,
     },
     pool: {

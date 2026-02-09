@@ -13,7 +13,7 @@ export class AuthService extends ShellEngine {
   }
 
   async validateLogin(email: string, password: string): Promise<User | null> {
-    const user = await this.sql_query(TABLE_NAMES.USERS)
+    const user = await this.query(TABLE_NAMES.USERS)
       .where({ u_email: email.trim(), u_status: 1 })
       .first();
 
@@ -37,7 +37,7 @@ export class AuthService extends ShellEngine {
   }
 
   private async getRunTypePermission(userId: number, appType: string, runType: string) {
-    const row = await this.sql_query("users as u")
+    const row = await this.query("users as u")
       .join("user_role_map as urm", "u.u_id", "urm.urm_u_id")
       .join("roles as r", "urm.urm_r_id", "r.r_id")
       .join("role_permissions as rp", "r.r_id", "rp.rp_r_id")
@@ -56,7 +56,7 @@ export class AuthService extends ShellEngine {
   }
 
   private async getDefaultAppPermission(userId: number, appType: string) {
-    const row = await this.sql_query("users as u")
+    const row = await this.query("users as u")
       .join("user_role_map as urm", "u.u_id", "urm.urm_u_id")
       .join("roles as r", "urm.urm_r_id", "r.r_id")
       .join("role_permissions as rp", "r.r_id", "rp.rp_r_id")

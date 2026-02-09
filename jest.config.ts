@@ -16,7 +16,6 @@ const baseTsJest = {
   },
 };
 
-
 const config: Config = {
   projects: [
     {

@@ -21,7 +21,7 @@ describe("RoofTopAppService", () => {
       orderBy: jest.fn().mockReturnThis(),
     };
 
-    jest.spyOn(service as any, "sql_query").mockReturnValue(mockQueryBuilder);
+    jest.spyOn(service as any, "query").mockReturnValue(mockQueryBuilder);
 
     const buildTableSpy = jest
       .spyOn(service as any, "BuildClarifyDataTable")
@@ -39,7 +39,8 @@ describe("RoofTopAppService", () => {
     const result = await service.RoofTopList();
 
     // query construction
-    expect((service as any).sql_query).toHaveBeenCalledWith(TABLE_NAMES.ROOFTOP);
+    expect((service as any).query).toHaveBeenCalledWith(TABLE_NAMES.ROOFTOP);
+
     expect(mockQueryBuilder.select).toHaveBeenCalledWith(
       "rt_id",
       "rt_dealer_id",
@@ -55,7 +56,7 @@ describe("RoofTopAppService", () => {
 
     // framework integration
     expect(buildTableSpy).toHaveBeenCalledWith({
-      query: mockQueryBuilder,
+      sqlQuery: mockQueryBuilder,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.ROOFTOP,
       columns: ROOFTOP_COLUMNS_CONFIG,
       configOverrides: ROOFTOP_TABLE_CONFIG,

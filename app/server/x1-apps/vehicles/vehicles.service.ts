@@ -5,7 +5,7 @@ import { UIComponentType } from "~/shared/admin.enums";
 
 export class VehicleService extends FrameWorkAppService {
   async getVehicleList() {
-    const query = this.sql_query({ v: TABLE_NAMES.VEHICLES })
+    const sqlQuery = this.query({ v: TABLE_NAMES.VEHICLES })
       .leftJoin({ y: TABLE_NAMES.VEHICLE_YEAR }, "v.veh_year_id", "y.id")
       .leftJoin({ mk: TABLE_NAMES.VEHICLE_MAKE }, "v.veh_make_id", "mk.id")
       .leftJoin({ md: TABLE_NAMES.VEHICLE_MODEL }, "v.veh_model_id", "md.id")
@@ -21,19 +21,19 @@ export class VehicleService extends FrameWorkAppService {
         "v.veh_listing_type",
         "v.veh_certified",
         "v.veh_miles",
-        this.sql_query.raw("y.year AS year"),
-        this.sql_query.raw("mk.make AS make"),
-        this.sql_query.raw("md.model AS model"),
-        this.sql_query.raw("tr.trim AS trim"),
-        this.sql_query.raw("bt.body_type AS body_type"),
-        this.sql_query.raw("ec.color AS exterior_color"),
-        this.sql_query.raw("ic.color AS interior_color"),
+        this.query.raw("y.year AS year"),
+        this.query.raw("mk.make AS make"),
+        this.query.raw("md.model AS model"),
+        this.query.raw("tr.trim AS trim"),
+        this.query.raw("bt.body_type AS body_type"),
+        this.query.raw("ec.color AS exterior_color"),
+        this.query.raw("ic.color AS interior_color"),
         "v.veh_ctime",
       ])
       .whereNull("v.veh_dtime");
 
     return this.BuildClarifyDataTable({
-      query,
+      sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLES,
       columns: VEHICLE_COLUMNS_CONFIG,
       configOverrides: VEHICLE_TABLE_CONFIG,

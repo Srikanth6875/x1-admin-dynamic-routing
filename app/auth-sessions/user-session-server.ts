@@ -1,10 +1,10 @@
 import { createCookie } from "react-router";
 import { redis } from "~/database/redis-server";
-import { getTrimEnvKey } from "~/shared/util-helper";
+import { getEnvKey } from "~/shared/util-helper";
 
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 min idle timeout
-const SESSION_SECRET = getTrimEnvKey("SESSION_SECRET") || "DEV_SECRET";
-const APP_SECURE = getTrimEnvKey("NODE_ENV") === "production";
+const SESSION_SECRET = getEnvKey("SESSION_SECRET") || "DEV_SECRET";
+const APP_SECURE = getEnvKey("NODE_ENV") === "production";
 const SESSION_PREFIX = "user_session:";
 
 // Cookie stores ONLY the session ID

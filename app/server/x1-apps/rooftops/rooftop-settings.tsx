@@ -1,5 +1,4 @@
 import type { ColumnMetadata } from "@codeJ09/design-system/data-table";
-
 import { z } from "zod";
 import type { TableActionBtn } from "~/shared/listining-types";
 
@@ -27,7 +26,7 @@ export const ROOFTOP_TABLE_CONFIG = {
       placeholder: "Search Rooftops...",
     },
     editing: {
-      enabled: false
+      enabled: true
     }
   }
 }
@@ -38,7 +37,8 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     key: "rt_name",
     label: "RoofTop Name",
     type: "string",
-    editable: false,
+    width: 320,
+    editable: true,
     editor: {
       type: 'text',
       validation: [

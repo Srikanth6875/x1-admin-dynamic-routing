@@ -34,7 +34,6 @@ export const MONGO_COLLECTIONS = {
   VEHICLE_OPTIONS: "vehicle_options",
 };
 
-
 export const CLARITY_DATA_TABLE_UNIQUE_IDS = {
   ROOFTOP: "rooftop_table",
   VEHICLES: "vehicles_table",

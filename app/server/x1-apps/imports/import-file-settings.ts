@@ -13,7 +13,7 @@ export const IMPORT_JOB_TABLE_CONFIG = {
     features: {
         pagination: {
             pageSize: 25,
-            pageSizeOptions: [50, 100, 750, 1000],
+            pageSizeOptions: [20, 50, 75, 100],
         },
         search: {
             placeholder: "Search Import Jobs...",
@@ -38,7 +38,7 @@ export const IMPORT_FILE_JOB_TABLE_CONFIG = {
     features: {
         pagination: {
             pageSize: 25,
-            pageSizeOptions: [50, 100, 750, 1000],
+             pageSizeOptions: [20, 50, 75, 100],
         },
         search: {
             placeholder: "Search File Import Jobs...",

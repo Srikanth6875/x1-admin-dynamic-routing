@@ -5,12 +5,12 @@ import { CLARITY_DATA_TABLE_UNIQUE_IDS, TABLE_NAMES } from "~/shared/contstants"
 
 export class RoofTopAppService extends FrameWorkAppService {
   async RoofTopList() {
-    const query = this.sql_query(TABLE_NAMES.ROOFTOP)
+    const sqlQuery = this.query(TABLE_NAMES.ROOFTOP)
       .select("rt_id", "rt_dealer_id", "rt_name", "rt_street", "rt_city", "rt_state", "rt_zip", "rt_ph")
       .orderBy("rt_id", "desc");
 
     return this.BuildClarifyDataTable({
-      query,
+      sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.ROOFTOP,
       columns: ROOFTOP_COLUMNS_CONFIG,
       configOverrides: ROOFTOP_TABLE_CONFIG,

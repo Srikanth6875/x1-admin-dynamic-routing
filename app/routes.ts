@@ -15,7 +15,7 @@ export default [
         file: "routes/admin.layout.tsx",
         children: [route(":app-type/:run-type", "routes/admin.listing.tsx")],
     },
-    // route("actions/inline-edit", "routes/actions/inline-edit.tsx"),
+    route("actions/inline-edit", "routes/actions/inline-edit.tsx"),
     route("*", "routes/not-found.tsx"),
 ] satisfies RouteConfig;
 

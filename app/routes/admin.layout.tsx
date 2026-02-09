@@ -40,11 +40,11 @@ export default function AppLayout() {
   }, [location.pathname, isMobile]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 overflow-hidden">
       <AppHeader onToggleSidebar={() => setSidebarOpen((p) => !p)} items={topNavItems} />
 
       {isLoading && (
-        <div className="fixed top-12 left-0 z-30 h-1 w-full overflow-hidden bg-[oklch(64.5%_0.246_16.439_/_0.25)]">
+        <div className="fixed top-12 left-0 z-30 h-[3px] w-full overflow-hidden bg-[oklch(64.5%_0.246_16.439_/_0.25)]">
           <div className="h-full w-full animate-loading-bar bg-[oklch(64.5%_0.246_16.439)]" />
         </div>
       )}

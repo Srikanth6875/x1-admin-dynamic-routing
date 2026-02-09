@@ -4,9 +4,8 @@ import { CLARITY_DATA_TABLE_UNIQUE_IDS, TABLE_NAMES } from "~/shared/contstants"
 import { IMPORT_FILE_JOB_COLUMNS_CONFIG, IMPORT_FILE_JOB_TABLE_CONFIG, IMPORT_FILE_JOB_TABLE_HEADING, IMPORT_JOB_COLUMNS_CONFIG, IMPORT_JOB_TABLE_CONFIG, IMPORT_JOB_TABLE_HEADING } from "./import-file-settings";
 
 export class ImportJobsAppService extends FrameWorkAppService {
-
     async ImportJobList() {
-        const query = this.sql_query.raw(`SELECT ij_source, ij_status, ij_total_records, ij_file_name,
+        const sqlQuery = this.query.raw(`SELECT ij_source, ij_status, ij_total_records, ij_file_name,
                             ROUND((ij_file_size::numeric / 1024 / 1024), 2) AS ij_file_size,
                             ij_start_time,
                             ij_end_time,
@@ -19,7 +18,7 @@ export class ImportJobsAppService extends FrameWorkAppService {
                         `);
 
         return this.BuildClarifyDataTable({
-            query,
+            sqlQuery,
             table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.IMPORT_JOBS,
             columns: IMPORT_JOB_COLUMNS_CONFIG,
             configOverrides: IMPORT_JOB_TABLE_CONFIG,
@@ -29,11 +28,11 @@ export class ImportJobsAppService extends FrameWorkAppService {
     }
 
     async ImportFileJobList() {
-        const query = this.sql_query(TABLE_NAMES.IMPORT_FILE_JOBS)
+        const sqlQuery = this.query(TABLE_NAMES.IMPORT_FILE_JOBS)
             .select(
                 "ifj_id",
                 "ifj_local_file_name",
-                this.sql_query.raw(`ROUND((ifj_file_size::numeric / 1024 / 1024), 2) as ifj_file_size`),
+                this.query.raw(`ROUND((ifj_file_size::numeric / 1024 / 1024), 2) as ifj_file_size`),
                 "ifj_status",
                 "ifj_total_records",
                 "ifj_skipped_records",
@@ -47,7 +46,7 @@ export class ImportJobsAppService extends FrameWorkAppService {
             ).orderBy("ifj_id", "desc");
 
         return this.BuildClarifyDataTable({
-            query,
+            sqlQuery,
             table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.IMPORT_FILE_JOBS,
             columns: IMPORT_FILE_JOB_COLUMNS_CONFIG,
             configOverrides: IMPORT_FILE_JOB_TABLE_CONFIG,
