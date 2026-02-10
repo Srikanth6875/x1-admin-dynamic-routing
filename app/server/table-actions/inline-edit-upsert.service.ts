@@ -6,7 +6,6 @@ class InlineEditService extends ShellEngine {
     constructor() {
         super();
     }
-
     async updateCell({ row, tableId, columnId, oldValue, newValue }: EditPayload) {
         if (oldValue === newValue) return;
 

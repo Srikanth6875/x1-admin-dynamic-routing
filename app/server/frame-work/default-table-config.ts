@@ -45,7 +45,6 @@ export const DEFAULT_TABLE_CONFIG: DataTableConfig = {
     },
     editing: {
       enabled: true,
-      autoSaveOnBlur: false,
       highlightEdited: true,
       autoSaveDelay: 0,
     },

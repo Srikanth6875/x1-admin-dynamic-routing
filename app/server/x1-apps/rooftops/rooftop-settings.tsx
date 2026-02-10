@@ -10,8 +10,7 @@ export const ROOFTOP_TABLE_HEADING: { title: string; actions: TableActionBtn[]; 
       btn_variant: "primary",
       route_prefix: "list",
       appType: "rooftop",
-      runType: "create",
-      params: { mode: "new" },
+      runType: "create"
     },
   ],
 };
@@ -32,27 +31,30 @@ export const ROOFTOP_TABLE_CONFIG = {
 }
 
 export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
-  { key: "rt_dealer_id", label: "Rooftop ID", type: "string" },
+  // { key: "rt_dealer_id", label: "Rooftop ID", type: "string", hidden:true },
   {
     key: "rt_name",
     label: "RoofTop Name",
     type: "string",
-    width: 320,
+    width: 250,
+    sortable:true,
+    filterable: true,
     editable: true,
     editor: {
       type: 'text',
       validation: [
-        z.string().trim().min(1, 'RoofTop name is required'),
+        z.string().trim().min(1, 'Product name is required'),
         z.string().trim().min(3, 'Name must be at least 3 characters'),
         z.string().trim().max(50, 'Name must be less than 50 characters'),
-      ],
+      ]
     },
   },
-  {
+  /*{
     key: "rt_street",
     label: "Street",
     type: "string",
     editable: true,
+    width: 250,
     editor: {
       type: 'text',
       validation: [
@@ -66,6 +68,7 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     key: "rt_city",
     label: "City",
     type: "string",
+    width: 250,
     editable: true,
     editor: {
       type: 'text',
@@ -78,7 +81,20 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
   },
   { key: "rt_state", label: "State", type: "string" },
   { key: "rt_zip", label: "Zip", type: "string" },
-  { key: "rt_ph", label: "Phone", type: "string" }
+  {
+    key: "rt_ph",
+    label: "Phone",
+    type: "string",
+    width: 250,
+    editable: true,
+    editor: {
+      type: 'tel',
+      validation: [
+        z.string().trim().min(7, "Phone number is too short").max(15, "Phone number is too long")
+          .regex(/^[0-9+()\-\s]+$/, "Phone number contains invalid characters"),
+      ],
+    }
+  }*/
 ];
 
 export const ROOFTOP_TABLE_ROW_ACTIONS: TableActionBtn[] = [
@@ -88,7 +104,7 @@ export const ROOFTOP_TABLE_ROW_ACTIONS: TableActionBtn[] = [
     route_prefix: "forms",
     appType: "VEH_INFO",
     runType: "EDIT_ROOFTOP",
-    params: { mode: "edit" },
+    params: { id: "rt_id" },
   },
   {
     btn_label: "Delete",
@@ -96,6 +112,6 @@ export const ROOFTOP_TABLE_ROW_ACTIONS: TableActionBtn[] = [
     route_prefix: "forms",
     appType: "VEH_INFO",
     runType: "DELETE_ROOFTOP",
-    params: { mode: "delete" },
+    params: { id: "rt_id" },
   }
 ];

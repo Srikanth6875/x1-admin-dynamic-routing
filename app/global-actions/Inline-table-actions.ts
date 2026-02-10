@@ -7,7 +7,7 @@ type OnUpdateHandler = NonNullable<Exclude<EditorConfig, boolean>>["onUpdate"];
 
 export const editOnUpdateAdapter = (handler: (payload: EditPayload) => Promise<void>): OnUpdateHandler =>
   async (params) => {
-    await handler({
+    const result = await handler({
       row: {
         index: params.row.index,
         original: params.row.original as Record<string, any>,
@@ -20,6 +20,7 @@ export const editOnUpdateAdapter = (handler: (payload: EditPayload) => Promise<v
   };
 
 export const handleCellUpdate = async (payload: EditPayload): Promise<void> => {
+  console.log("payload", payload);
   try {
     await apiClient.post("/actions/inline-edit", payload);
   } catch (error) {

@@ -1,19 +1,21 @@
 import type React from "react";
 import { Link } from "react-router";
-import { buildActionLink, getActionBtnClasses } from "../core-components/action-helper";
+import { buildActionLinkwithid, getActionBtnClasses } from "../core-components/action-helper";
 import type { TableActionBtn } from "~/shared/listining-types";
-type TableColumnActionsProps = {
+type TableColumnActionsProps<TData> = {
   actions: TableActionBtn[];
+  row: TData;
 };
 
-export const TableColumnActions: React.FC<TableColumnActionsProps> = ({ actions }) => {
-  if (actions.length === 0) return null;
+export const TableColumnActions = <TData extends Record<string, any>>({ actions, row, }: TableColumnActionsProps<TData>) => {
+  if (!actions.length) return null;
+
   return (
     <div className="flex gap-2">
       {actions.map((action, index) => (
         <Link
           key={index}
-          to={buildActionLink(action)}
+          to={buildActionLinkwithid(action, row)}
           className={`px-1.5 py-1 rounded-md text-sm font-medium border transition whitespace-nowrap ${getActionBtnClasses(
             action.btn_variant
           )}`}

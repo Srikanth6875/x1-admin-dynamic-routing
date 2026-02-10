@@ -1,12 +1,12 @@
 import { ServerRouter } from "react-router";
 import { renderToPipeableStream } from "react-dom/server";
 import { createReadableStreamFromReadable } from "@react-router/node";
-import type { EntryContext } from "react-router";
 import { PassThrough } from "node:stream";
+import type { EntryContext } from "react-router";
 import { isbot } from "isbot";
 import "~/run-engine/reflection-registry.service";
 
-const ABORT_DELAY = 10_000; // safer for cold starts / data loaders
+const ABORT_DELAY = 5000;
 
 export default function handleRequest(
   request: Request,
@@ -14,97 +14,70 @@ export default function handleRequest(
   responseHeaders: Headers,
   routerContext: EntryContext,
 ) {
-  const userAgent = request.headers.get("user-agent") ?? "";
-  const isBotRequest = isbot(userAgent);
-
+  const isBot = isbot(request.headers.get("user-agent") ?? "");
   return new Promise<Response>((resolve) => {
     let didError = false;
-    let resolved = false;
-
-    const safeResolve = (response: Response) => {
-      if (resolved) return;
-      resolved = true;
-      resolve(response);
-    };
 
     const { pipe, abort } = renderToPipeableStream(
       <ServerRouter context={routerContext} url={request.url} />,
       {
         /**
-         * REAL USERS
-         * - Fast TTFB
-         * - Streams Suspense boundaries progressively
+         * FAST PATH (real users)
+         * Sends shell immediately, streams Suspense later
          */
         onShellReady() {
-          if (isBotRequest) return;
-
+          if (isBot) return;
           responseHeaders.set("Content-Type", "text/html; charset=utf-8");
 
           const body = new PassThrough({
-            highWaterMark: 64 * 1024, // smoother streaming
+            highWaterMark: 64 * 1024, // reduce backpressure
           });
-
           const stream = createReadableStreamFromReadable(body);
 
-          safeResolve(
+          resolve(
             new Response(stream, {
               status: didError ? 500 : responseStatusCode,
               headers: responseHeaders,
             }),
           );
-
           pipe(body);
         },
 
         /**
-         * BOTS / SEO
-         * - Wait for full HTML
-         * - Ensures complete markup for crawlers
+         * BOT PATH (SEO)
+         * Waits for everything to be ready
          */
         onAllReady() {
-          if (!isBotRequest) return;
-
+          if (!isBot) return;
           responseHeaders.set("Content-Type", "text/html; charset=utf-8");
-
           const body = new PassThrough();
           const stream = createReadableStreamFromReadable(body);
 
-          safeResolve(
+          resolve(
             new Response(stream, {
               status: didError ? 500 : responseStatusCode,
               headers: responseHeaders,
             }),
           );
-
           pipe(body);
         },
 
-        /**
-         * Shell failed — bail out hard
-         */
         onShellError(err) {
-          console.error("SSR shell error:", err);
-
-          safeResolve(
+          console.error(err);
+          resolve(
             new Response("Internal Server Error", {
               status: 500,
-              headers: new Headers({
-                "Content-Type": "text/plain; charset=utf-8",
-              }),
+              headers: responseHeaders,
             }),
           );
         },
 
-        /**
-         * Rendering error after shell
-         */
         onError(err) {
           didError = true;
-          console.error("SSR render error:", err);
+          console.error(err);
         },
       },
     );
-
     setTimeout(abort, ABORT_DELAY);
   });
 }

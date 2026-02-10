@@ -1,5 +1,5 @@
 import type { ColumnMetadata } from "@codeJ09/design-system/data-table";
-
+import { z } from "zod";
 export const MAKE_TABLE_HEADING: { title: string; } = {
   title: "Vehicle Makes",
 };
@@ -55,8 +55,19 @@ export const TRIM_TABLE_CONFIG = {
 export const TRIM_COLUMNS_CONFIG: ColumnMetadata[] = [
   { key: "id", label: "Id", type: "number" },
   { key: "make", label: "Make", type: "string" },
-  { key: "model", label: "Model", type: "string" },
-  { key: "trim", label: "Trim", type: "string" },
+  { key: "model", label: "Model", type: "string", },
+  {
+    key: "trim",
+    label: "Trim",
+    type: "string",
+    editable: true,
+    editor: {
+      type: "select",
+      validation: [
+        z.string().trim().min(1, "Trim is required"),
+      ],
+    },
+  },
   { key: "trim_ctime", label: "Create", type: "string" },
   { key: "trim_mtime", label: "Update", type: "string" },
 ];
