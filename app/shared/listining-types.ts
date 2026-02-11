@@ -22,14 +22,11 @@ export type TableActionBtn = {
 };
 
 /* -------------------------- Table Header -------------------------- */
-
 export type TableHeader = {
   title: string;
   actions?: TableActionBtn[];
 };
-
 /* -------------------------- Table Payload ------------------------- */
-
 export interface TablePayload<TData = unknown> {
   table_unique_id: string;
   data: TData[];
@@ -38,16 +35,14 @@ export interface TablePayload<TData = unknown> {
   row_actions?: TableActionBtn[];
   table_header?: TableHeader;
 }
-
 /* ---------------------- Render Descriptor ------------------------- */
-
 export type TableRenderDescriptor<TData = unknown> = {
   component_type: UIComponentType.TABLE;
   payload: TablePayload<TData>;
 };
 
 export type ClarityDataTableProps<TData = unknown> = {
-  payload: TablePayload<TData>;
+  payload: TablePayload<Record<string, any>>
 };
 
 export type ClarityTableHeaderProps = {
@@ -57,17 +52,18 @@ export type ClarityTableHeaderProps = {
   };
 };
 
-
 /* ------------------------ Framework Types ------------------------- */
 
-export type RenderResult<TData = unknown> = TableRenderDescriptor<TData>;
+export type RenderResult<TData extends Record<string, any> = Record<string, any>> = {
+  component_type: UIComponentType;
+  payload: TablePayload<TData>
+};
 
-export type FrameworkRendererProps<TData = unknown> = {
+export type FrameworkRendererProps<TData extends Record<string, any> = Record<string, any>> = {
   render: RenderResult<TData>;
 };
 
-/* ----------------------- Backend Execution ------------------------ */
-
+/* ---------------------- Backend Execution ------------------------ */
 export type ExecuteWithPermission = {
   userId: number;
   app_type: string;

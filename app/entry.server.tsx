@@ -15,6 +15,7 @@ export default function handleRequest(
   routerContext: EntryContext,
 ) {
   const isBot = isbot(request.headers.get("user-agent") ?? "");
+
   return new Promise<Response>((resolve) => {
     let didError = false;
 
@@ -22,16 +23,18 @@ export default function handleRequest(
       <ServerRouter context={routerContext} url={request.url} />,
       {
         /**
-         * FAST PATH (real users)
-         * Sends shell immediately, streams Suspense later
+         * REAL USERS → fastest possible TTFB
+         * Send shell immediately, stream Suspense later
          */
         onShellReady() {
           if (isBot) return;
+
           responseHeaders.set("Content-Type", "text/html; charset=utf-8");
 
           const body = new PassThrough({
-            highWaterMark: 64 * 1024, // reduce backpressure
+            highWaterMark: 128 * 1024, // smoother streaming under load
           });
+
           const stream = createReadableStreamFromReadable(body);
 
           resolve(
@@ -40,16 +43,18 @@ export default function handleRequest(
               headers: responseHeaders,
             }),
           );
+
           pipe(body);
         },
 
         /**
-         * BOT PATH (SEO)
-         * Waits for everything to be ready
+         * BOTS → wait for full render (SEO correctness)
          */
         onAllReady() {
           if (!isBot) return;
+
           responseHeaders.set("Content-Type", "text/html; charset=utf-8");
+
           const body = new PassThrough();
           const stream = createReadableStreamFromReadable(body);
 
@@ -59,6 +64,7 @@ export default function handleRequest(
               headers: responseHeaders,
             }),
           );
+
           pipe(body);
         },
 
@@ -78,6 +84,8 @@ export default function handleRequest(
         },
       },
     );
+
+    // Abort stalled renders (memory + CPU protection)
     setTimeout(abort, ABORT_DELAY);
   });
 }

@@ -5,6 +5,7 @@ export const redis = createClient({
   socket: {
     host: getEnvKey("REDIS_HOST"),
     port: Number(getEnvKey("REDIS_PORT", "6379")),
+    keepAlive: true,
   },
   password: getEnvKey("REDIS_PASSWORD"),
 });

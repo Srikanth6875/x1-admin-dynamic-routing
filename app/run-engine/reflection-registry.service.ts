@@ -51,20 +51,24 @@ class ReflectionService {
 
   async executeReflectionEngine<T = unknown>(className: string, methodName: string,): Promise<T> {
 
-    if (!className || !methodName) return [] as unknown as T;
+    if (!className || !methodName) {
+      throw new Response("Reflection execution requires className and methodName", { status: 400 });
+    }
     await this.runEngine();
 
     const instance = this.getClassInstance<Record<string, unknown>>(className);
-    if (!instance) return [] as unknown as T;
+    if (!instance) {
+      throw new Response(`Reflection class not registered: ${className}`, { status: 500 });
+    }
     const method = instance[methodName];
 
     if (typeof method !== "function") {
-      console.warn(`[Reflection] Method not found: ${className}.${methodName}`);
-      return [] as unknown as T;
+      throw new Response(`Reflection method not found: ${className}.${methodName}`, { status: 500 });
     }
 
     try {
-      return ((await (method as () => T).call(instance)) ?? ([] as unknown as T));
+      const result = await (method as () => T).call(instance);
+      return result as T;
     } catch (err) {
       console.error("[Reflection Error]", err);
       return [] as unknown as T;

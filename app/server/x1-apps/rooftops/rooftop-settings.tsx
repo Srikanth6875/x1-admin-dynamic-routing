@@ -37,7 +37,7 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     label: "RoofTop Name",
     type: "string",
     width: 250,
-    sortable:true,
+    sortable: true,
     filterable: true,
     editable: true,
     editor: {
@@ -49,7 +49,7 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
       ]
     },
   },
-  /*{
+  {
     key: "rt_street",
     label: "Street",
     type: "string",
@@ -94,7 +94,7 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
           .regex(/^[0-9+()\-\s]+$/, "Phone number contains invalid characters"),
       ],
     }
-  }*/
+  }
 ];
 
 export const ROOFTOP_TABLE_ROW_ACTIONS: TableActionBtn[] = [

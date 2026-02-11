@@ -10,7 +10,7 @@ export type ListingLoaderData = {
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { userId, sessionId, headers } = await requireUserSession(request).catch(() => {
+  const { userId, headers } = await requireUserSession(request).catch(() => {
     throw redirect("/login");
   });
 

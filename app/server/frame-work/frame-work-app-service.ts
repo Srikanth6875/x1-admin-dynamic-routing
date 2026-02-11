@@ -5,10 +5,11 @@ import { DEFAULT_TABLE_CONFIG, type ClarifyDataTableParams } from "./default-tab
 import { ObjectdeepMerge } from "~/shared/util-helper";
 
 export abstract class FrameWorkAppService extends ShellEngine {
-    protected async BuildClarifyDataTable(params: ClarifyDataTableParams): Promise<RenderResult> {
-        const { component_type, sqlQuery, table_unique_id, columns, configOverrides = {}, table_header, row_actions = [], } = params;
+    protected async BuildClarifyDataTable<TData extends Record<string, any>>(params: ClarifyDataTableParams): Promise<RenderResult> {
 
-        const data = (await this.executeQuery(sqlQuery)) ?? [];
+        const { component_type, sqlQuery, table_unique_id, columns, configOverrides = {}, table_header, row_actions = [], } = params;
+        const data = await this.executeQuery<TData>(sqlQuery);
+
         return {
             component_type,
             payload: {
