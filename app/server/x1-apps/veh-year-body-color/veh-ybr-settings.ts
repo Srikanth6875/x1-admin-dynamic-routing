@@ -40,6 +40,7 @@ export const BODY_TYPE_COLUMNS_CONFIG: ColumnMetadata[] = [
 export const YEAR_TYPE_TABLE_HEADING: { title: string; } = {
   title: "Vehicle Years",
 };
+
 export const YEAR_TABLE_CONFIG = {
   features: {
     search: {
