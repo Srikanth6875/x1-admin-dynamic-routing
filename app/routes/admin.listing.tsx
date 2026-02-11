@@ -10,6 +10,7 @@ export type ListingLoaderData = {
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+
   const { userId, headers } = await requireUserSession(request).catch(() => {
     throw redirect("/login");
   });
@@ -32,5 +33,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export default function AdminDynamicRoute() {
   const { render_response } = useLoaderData<ListingLoaderData>();
+
   return <FrameworkRenderer render={render_response as any} />;
+
 }
