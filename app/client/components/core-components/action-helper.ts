@@ -25,3 +25,21 @@ export const getActionBtnClasses = (variant?: TableActionBtn["btn_variant"]) => 
             return "bg-[#0074cc] text-white hover:bg-[#0074cc]";
     }
 };
+
+
+export const buildActionLinkwithid = <TData extends Record<string, any>>(
+    action: TableActionBtn,
+    row: TData
+) => {
+    const basePath = `/${action.route_prefix ?? "list"}/${action.appType}/${action.runType}`;
+    if (!action.params) return basePath;
+ 
+    const resolvedParams = Object.fromEntries(
+        Object.entries(action.params).map(([key, value]) => [
+            key,
+            row[value as keyof TData] ?? value,
+        ])
+    );
+ 
+    return `${basePath}?${new URLSearchParams(resolvedParams).toString()}`;
+};

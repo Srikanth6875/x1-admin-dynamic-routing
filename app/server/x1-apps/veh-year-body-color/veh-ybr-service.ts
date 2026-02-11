@@ -41,4 +41,5 @@ export class VehicleYearBodyColorService extends FrameWorkAppService {
       table_header: COLORS_TABLE_HEADING,
     });
   }
+  
 }

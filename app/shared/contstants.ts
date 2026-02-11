@@ -6,13 +6,25 @@ export const topNavItems = [
 ];
 
 export const sidebarItems = [
-  { name: "Makes", appType: "VEH_INFO", runType: "GET_MAKES" },
-  { name: "Model", appType: "VEH_INFO", runType: "MODEL_LIST" },
-  { name: "Trim", appType: "VEH_INFO", runType: "VEH_TRIMS" },
-  { name: "Years", appType: "VEH_INFO", runType: "YEAR_LIST" },
-  { name: "Body Types", appType: "VEH_INFO", runType: "BODY_TYPES" },
-  { name: "Int/Ext Colors", appType: "VEH_INFO", runType: "VEH_COLORS" },
+  // { name: "Makes", appType: "VEH_INFO", runType: "GET_MAKES" },
+  // { name: "Model", appType: "VEH_INFO", runType: "MODEL_LIST" },
+  // { name: "Trim", appType: "VEH_INFO", runType: "VEH_TRIMS" },
+  // { name: "Years", appType: "VEH_INFO", runType: "YEAR_LIST" },
+  // { name: "Body Types", appType: "VEH_INFO", runType: "BODY_TYPES" },
+  // { name: "Int/Ext Colors", appType: "VEH_INFO", runType: "VEH_COLORS" },
+
+  { name: "COLOURS", appType: "COLOUR", runType: "GET_COLOURS" },
+  { name: "MAKES", appType: "MAKE", runType: "GET_MAKES" },
+  { name: "MODELS", appType: "MODEL", runType: "GET_MODELS" },
+  { name: "TRIMS", appType: "TRIM", runType: "GET_TRIMS" },
+  { name: "YEARS", appType: "YEAR", runType: "GET_YEARS" },
+
 ];
+
+
+
+
+
 
 export const TABLE_NAMES = {
   USERS: "users",
