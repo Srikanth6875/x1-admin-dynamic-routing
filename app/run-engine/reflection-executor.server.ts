@@ -1,6 +1,6 @@
 import { ReflectionRegistry } from "~/run-engine/reflection-registry.service";
 import { AuthService } from "~/auth-sessions/auth-app.service";
-import type { ExecuteWithPermission } from "~/shared/listining-types";
+import type { ExecuteWithPermission } from "~/types/listining-types";
 
 type Permission = { class_Name: string; class_Method_Name: string; } | null;
 

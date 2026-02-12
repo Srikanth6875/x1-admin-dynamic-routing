@@ -13,7 +13,7 @@
     "test:coverage:open": "jest --coverage && start coverage/lcov-report/index.html"
   },
   "dependencies": {
-    "@codeJ09/design-system": "0.2.11",
+    "@codeJ09/design-system": "0.2.12",
     "@react-router/node": "7.12.0",
     "@react-router/serve": "7.12.0",
     "axios": "^1.13.4",
@@ -21,12 +21,12 @@
     "dotenv": "^17.2.3",
     "isbot": "^5.1.31",
     "knex": "^3.1.0",
+    "lucide-react": "^0.563.0",
     "pg": "^8.17.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router": "7.12.0",
-    "redis": "^5.10.0",
-    "zod": "^4.3.6"
+    "redis": "^5.10.0"
   },
   "devDependencies": {
     "@react-router/dev": "7.12.0",

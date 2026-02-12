@@ -7,9 +7,8 @@ import {
   MODEL_COLUMNS_CONFIG,
   MODEL_FIELDS,
   MODEL_TABLE_CONFIG,
-  MODEL_TABLE_HEADING,
-  MODEL_TABLE_ROW_ACTIONS,
-} from "./Model";
+  MODEL_TABLE_ACTION_CONFIG
+} from "./vehicle-model-settings";
 import {
   CLARITY_DATA_TABLE_UNIQUE_IDS,
   TABLE_NAMES,
@@ -19,7 +18,7 @@ import { UIComponentType } from "~/shared/admin.enums";
 export class ModelAppService extends FrameWorkAppService {
 
   async ModelList() {
-    const query = this.sql_query({ vm: TABLE_NAMES.VEHICLE_MODEL })
+    const sqlQuery = this.query({ vm: TABLE_NAMES.VEHICLE_MODEL })
       .select(
         "vm.id",
         "mk.make as make",
@@ -31,19 +30,19 @@ export class ModelAppService extends FrameWorkAppService {
       .orderBy("id", "desc");
 
     return await this.BuildClarifyDataTable({
-      query,
+      sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MODELS,
       columns: MODEL_COLUMNS_CONFIG,
       configOverrides: MODEL_TABLE_CONFIG,
       component_type: UIComponentType.TABLE,
-      table_header: MODEL_TABLE_HEADING,
-      row_actions: MODEL_TABLE_ROW_ACTIONS,
+      table_header: MODEL_TABLE_ACTION_CONFIG.heading,
+      row_actions: MODEL_TABLE_ACTION_CONFIG.rowActions,
     });
   }
 
   async AddModel(del: boolean = false): Promise<BuildFormResult> {
     const fields = MODEL_FIELDS();
-    const makes = await this.sql_query({ vm: TABLE_NAMES.VEHICLE_MAKE }).select(
+    const makes = await this.query({ vm: TABLE_NAMES.VEHICLE_MAKE }).select(
       "vm.id as value",
       "vm.make as label",
     );

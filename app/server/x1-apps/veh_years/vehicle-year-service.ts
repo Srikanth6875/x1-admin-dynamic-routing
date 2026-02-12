@@ -7,9 +7,8 @@ import {
   YEAR_COLUMNS_CONFIG,
   YEAR_FIELDS,
   YEAR_TABLE_CONFIG,
-  YEAR_TABLE_HEADING,
-  YEAR_TABLE_ROW_ACTIONS,
-} from "./Year";
+  YEAR_TABLE_ACTION_CONFIG,
+} from "./vehicle-year-settings";
 import {
   CLARITY_DATA_TABLE_UNIQUE_IDS,
   TABLE_NAMES,
@@ -18,7 +17,7 @@ import { UIComponentType } from "~/shared/admin.enums";
 
 export class YearAppService extends FrameWorkAppService {
   async YearList() {
-    const query = this.sql_query({ vm: TABLE_NAMES.VEHICLE_YEAR }).select(
+    const sqlQuery = this.query({ vm: TABLE_NAMES.VEHICLE_YEAR }).select(
       "id",
       "year",
       "ctime",
@@ -27,13 +26,13 @@ export class YearAppService extends FrameWorkAppService {
     .orderBy("id","desc");
     
     return await this.BuildClarifyDataTable({
-      query,
+      sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_YEARS,
       columns: YEAR_COLUMNS_CONFIG,
       configOverrides: YEAR_TABLE_CONFIG,
       component_type: UIComponentType.TABLE,
-      table_header: YEAR_TABLE_HEADING,
-      row_actions: YEAR_TABLE_ROW_ACTIONS,
+      table_header: YEAR_TABLE_ACTION_CONFIG.heading,
+      row_actions: YEAR_TABLE_ACTION_CONFIG.rowActions,
     });
   }
 

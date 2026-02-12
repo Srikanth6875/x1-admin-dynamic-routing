@@ -1,16 +1,42 @@
 import type { ColumnMetadata } from "@codeJ09/design-system/data-table";
-import { z } from "zod";
-import type { TableActionBtn } from "~/shared/listining-types";
+import type { TableActionBtn } from "~/types/listining-types";
+import type { FormFields } from "~/types/form.types";
 
-export const ROOFTOP_TABLE_HEADING: { title: string; actions: TableActionBtn[]; } = {
-  title: "Rooftops",
-  actions: [
+export const ROOFTOP_TABLE_ACTION_CONFIG: {
+  heading: {
+    title: string;
+    actions: TableActionBtn[];
+  };
+  rowActions: TableActionBtn[];
+} = {
+  heading: {
+    title: "Rooftops",
+    actions: [
+      {
+        btn_label: "Add Rooftop",
+        btn_variant: "primary",
+        route_prefix: "forms",
+        appType: "ROOFTOPS",
+        runType: "ADD_ROOFTOP",
+      },
+    ],
+  },
+  rowActions: [
     {
-      btn_label: "Add Rooftop",
-      btn_variant: "primary",
-      route_prefix: "list",
-      appType: "rooftop",
-      runType: "create"
+      btn_label: "Edit",
+      btn_variant: "secondary",
+      route_prefix: "forms",
+      appType: "ROOFTOPS",
+      runType: "EDIT_ROOFTOP",
+      params: { rt_id: "rt_id" },
+    },
+    {
+      btn_label: "Delete",
+      btn_variant: "danger",
+      route_prefix: "forms",
+      appType: "ROOFTOPS",
+      runType: "DELETE_ROOFTOP",
+      params: { rt_id: "rt_id" },
     },
   ],
 };
@@ -31,7 +57,7 @@ export const ROOFTOP_TABLE_CONFIG = {
 }
 
 export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
-  // { key: "rt_dealer_id", label: "Rooftop ID", type: "string", hidden:true },
+  { key: "rt_dealer_id", label: "Rooftop ID", type: "string" },
   {
     key: "rt_name",
     label: "RoofTop Name",
@@ -43,9 +69,9 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     editor: {
       type: 'text',
       validation: [
-        z.string().trim().min(1, 'Product name is required'),
-        z.string().trim().min(3, 'Name must be at least 3 characters'),
-        z.string().trim().max(50, 'Name must be less than 50 characters'),
+        { kind: 'required', message: 'RoofTop name is required' },
+        { kind: 'min', value: 3, message: 'Name must be at least 3 characters' },
+        { kind: 'max', value: 50, message: 'Name must be less than 50 characters' },
       ]
     },
   },
@@ -58,9 +84,9 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     editor: {
       type: 'text',
       validation: [
-        z.string().trim().min(1, 'Street name is required'),
-        z.string().trim().min(3, 'Street must be at least 3 characters'),
-        z.string().trim().max(50, 'Street must be less than 50 characters'),
+        { kind: 'required', message: 'Street is required' },
+        { kind: 'min', value: 3, message: 'Name must be at least 3 characters' },
+        { kind: 'max', value: 50, message: 'Name must be less than 50 characters' },
       ],
     },
   },
@@ -73,9 +99,9 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     editor: {
       type: 'text',
       validation: [
-        z.string().trim().min(1, 'City name is required'),
-        z.string().trim().min(3, 'City must be at least 3 characters'),
-        z.string().trim().max(50, 'City must be less than 50 characters'),
+        { kind: 'required', message: 'City is required' },
+        { kind: 'min', value: 3, message: 'Name must be at least 3 characters' },
+        { kind: 'max', value: 50, message: 'Name must be less than 50 characters' },
       ],
     },
   },
@@ -90,28 +116,91 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     editor: {
       type: 'tel',
       validation: [
-        z.string().trim().min(7, "Phone number is too short").max(15, "Phone number is too long")
-          .regex(/^[0-9+()\-\s]+$/, "Phone number contains invalid characters"),
+        { kind: 'required', message: 'Phone number is required' },
+        { kind: 'pattern', value: '^[0-9]{10}$', message: 'Phone number must be 10 digits' }
       ],
     }
   }
 ];
 
-export const ROOFTOP_TABLE_ROW_ACTIONS: TableActionBtn[] = [
-  {
-    btn_label: "Edit",
-    btn_variant: "secondary",
-    route_prefix: "forms",
-    appType: "VEH_INFO",
-    runType: "EDIT_ROOFTOP",
-    params: { id: "rt_id" },
-  },
-  {
-    btn_label: "Delete",
-    btn_variant: "danger",
-    route_prefix: "forms",
-    appType: "VEH_INFO",
-    runType: "DELETE_ROOFTOP",
-    params: { id: "rt_id" },
-  }
-];
+export const ROOFTOP_FILEDS = (): FormFields => {
+  return {
+    rt_id: { db: "rt_id", type: "number", hidden: true },
+    guid: { db: "rt_guid", type: "guid", hidden: true },
+
+    dealerId: {
+      db: "rt_dealer_id",
+      type: "number",
+      required: true,
+      min: 4,
+      max: 50,
+      label: "Dealer ID",
+    },
+
+    name: {
+      db: "rt_name",
+      type: "text",
+      required: true,
+      max: 50,
+      label: "Dealer Name",
+    },
+
+    street: {
+      db: "rt_street",
+      type: "text",
+      max: 255,
+      label: "Street",
+    },
+
+    city: {
+      db: "rt_city",
+      type: "text",
+      max: 100,
+      label: "City",
+    },
+
+    state: {
+      db: "rt_state",
+      type: "text",
+      max: 50,
+      label: "State",
+    },
+
+    zip: {
+      db: "rt_zip",
+      type: "text",
+      max: 20,
+      label: "Zip",
+    },
+
+    phone: {
+      db: "rt_ph",
+      type: "number",
+      min: 10,
+      max: 10,
+      label: "Phone",
+    },
+
+    fax: {
+      db: "rt_carfax",
+      type: "number",
+      min: 10,
+      max: 10,
+      label: "Fax",
+    },
+
+    email: {
+      db: "rt_email",
+      type: "email",
+      max: 255,
+      label: "Email",
+    },
+
+    website: {
+      db: "rt_site",
+      type: "url",
+      max: 255,
+      label: "Website",
+    },
+  };
+};

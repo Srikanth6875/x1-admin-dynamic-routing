@@ -1,4 +1,4 @@
-import { RoofTopAppService } from "~/server/x1-apps/rooftops/rooftop-app.service";
+import { RoofTopAppService } from "~/server/x1-apps/rooftops/rooftop-app-service";
 import { UIComponentType } from "~/shared/admin.enums";
 import {
   ROOFTOP_COLUMNS_CONFIG,

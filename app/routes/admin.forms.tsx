@@ -13,7 +13,7 @@ import { requireUserSession } from "~/auth-sessions/auth-session.service";
 import { executeWithPermission } from "~/run-engine/reflection-executor.server";
 import { UIComponentType } from "~/shared/admin.enums";
 import { FrameworkRenderer } from "~/client/framework-renderer";
-import type { RenderResult } from "~/shared/listining-types";
+import type { RenderResult } from "~/types/listining-types";
 import type {
   ActionData,
   ExecuteResponse,
@@ -170,7 +170,8 @@ export default function FormRenderingPage() {
     navigate(listPath);
   }, [navigate, listPath]);
 
-const componentKey = `${form.app_type}-${form.mode}-${form.initialValues?.[form.idColumn] ?? "new"}`;
+  const recordId = form.initialValues?.[form.idColumn] ?? "new";
+  const componentKey = `${form.app_type}-${form.mode}-${recordId}-${location.pathname}`;
 
   const descriptor = useMemo((): RenderResult => {
     if (form.mode === "DELETE") {

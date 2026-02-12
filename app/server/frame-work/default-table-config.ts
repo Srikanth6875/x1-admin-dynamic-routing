@@ -1,7 +1,7 @@
 import type { ColumnMetadata, DataTableConfig } from "@codeJ09/design-system";
 import type { Knex } from "knex";
 import type { UIComponentType } from "~/shared/admin.enums";
-import type { DeepPartial, TableActionBtn } from "~/shared/listining-types";
+import type { DeepPartial, TableActionBtn } from "~/types/listining-types";
 
 export type ClarifyDataTableParams = {
   component_type: UIComponentType;

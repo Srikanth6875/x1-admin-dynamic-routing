@@ -12,10 +12,10 @@ import type {
 
 export type DeepPartial<T> =
   T extends Array<infer U>
-    ? Array<U>
-    : T extends object
-      ? { [K in keyof T]?: DeepPartial<T[K]> }
-      : T;
+  ? Array<U>
+  : T extends object
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : T;
 
 /* ------------------------- Action Button -------------------------- */
 
@@ -61,20 +61,20 @@ export type ClarityTableHeaderProps = {
 
 /* ------------------------ Framework Types ------------------------- */
 
-export type RenderResult<TData = unknown> = TableRenderDescriptor<TData>;
+// export type RenderResult<TData = unknown> = TableRenderDescriptor<TData>;
 
-export type FrameworkRendererProps<TData extends Record<string, any> = Record<string, any>> = {
-  render: RenderResult<TData>;
-};
-
-// export type RenderResult =
-//   | TableRenderDescriptor
-//   | FormRenderDescriptor
-//   | DeleteRenderDescriptor;
-
-// export type FrameworkRendererProps = {
-//   render: RenderResult;
+// export type FrameworkRendererProps<TData extends Record<string, any> = Record<string, any>> = {
+//   render: RenderResult<TData>;
 // };
+
+export type RenderResult =
+  | TableRenderDescriptor
+  | FormRenderDescriptor
+  | DeleteRenderDescriptor;
+
+export type FrameworkRendererProps = {
+  render: RenderResult;
+};
 
 /* ---------------------- Backend Execution ------------------------ */
 export type ExecuteWithPermission = {

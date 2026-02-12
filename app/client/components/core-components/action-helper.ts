@@ -1,17 +1,7 @@
-import type { TableActionBtn } from "~/shared/listining-types";
+import type { TableActionBtn } from "~/types/listining-types";
 
 export const buildActionLink = (action: TableActionBtn) => {
     return `/${action.route_prefix ?? "list"}/${action.appType}/${action.runType}`;
-};
-
-export const buildActionLinkwithid = <TData extends Record<string, any>>(action: TableActionBtn, row: TData) => {
-    const basePath = `/${action.route_prefix ?? "list"}/${action.appType}/${action.runType}`;
-    if (!action.params) return basePath;
-
-    const resolvedParams = Object.fromEntries(
-        Object.entries(action.params).map(([key, value]) => [key, row[value as keyof TData] ?? value,])
-    );
-    return `${basePath}?${new URLSearchParams(resolvedParams).toString()}`;
 };
 
 export const getActionBtnClasses = (variant?: TableActionBtn["btn_variant"]) => {
@@ -33,13 +23,13 @@ export const buildActionLinkwithid = <TData extends Record<string, any>>(
 ) => {
     const basePath = `/${action.route_prefix ?? "list"}/${action.appType}/${action.runType}`;
     if (!action.params) return basePath;
- 
+
     const resolvedParams = Object.fromEntries(
         Object.entries(action.params).map(([key, value]) => [
             key,
             row[value as keyof TData] ?? value,
         ])
     );
- 
+
     return `${basePath}?${new URLSearchParams(resolvedParams).toString()}`;
 };

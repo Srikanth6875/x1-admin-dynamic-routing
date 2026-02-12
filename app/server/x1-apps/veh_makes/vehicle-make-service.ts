@@ -3,33 +3,32 @@ import type {
   BuildFormResult,
   SaveFormResult,
 } from "~/types/form-builder.types";
-import { MAKE_FIELDS, MAKE_TABLE_HEADING, MAKE_TABLE_ROW_ACTIONS, MAKES_COLUMNS_CONFIG, MAKES_TABLE_CONFIG } from "./Make";
+import { MAKE_FIELDS, MAKE_TABLE_ACTION_CONFIG, MAKES_COLUMNS_CONFIG, MAKES_TABLE_CONFIG } from "./vehicle-make-settings";
 import { CLARITY_DATA_TABLE_UNIQUE_IDS, TABLE_NAMES } from "~/shared/contstants";
 import { UIComponentType } from "~/shared/admin.enums";
 
-export class MakeAppService extends FrameWorkAppService  {
-  
+export class MakeAppService extends FrameWorkAppService {
+
   async MakeList() {
-     const query = this.sql_query(TABLE_NAMES.VEHICLE_MAKE)
-     .select("id", "make", "make_ctime", "make_mtime",)
-     .orderBy("id", "desc");
-    
-        return await this.BuildClarifyDataTable({
-          query: query,
-          table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MAKES,
-          columns: MAKES_COLUMNS_CONFIG,
-          configOverrides: MAKES_TABLE_CONFIG,
-          component_type: UIComponentType.TABLE,
-          table_header: MAKE_TABLE_HEADING,
-          row_actions: MAKE_TABLE_ROW_ACTIONS,
-        });
+    const sqlQuery = this.query(TABLE_NAMES.VEHICLE_MAKE)
+      .select("id", "make", "make_ctime", "make_mtime",)
+      .orderBy("id", "desc");
+
+    return await this.BuildClarifyDataTable({
+      sqlQuery,
+      table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MAKES,
+      columns: MAKES_COLUMNS_CONFIG,
+      configOverrides: MAKES_TABLE_CONFIG,
+      component_type: UIComponentType.TABLE,
+      table_header: MAKE_TABLE_ACTION_CONFIG.heading,
+      row_actions: MAKE_TABLE_ACTION_CONFIG.rowActions,
+    });
 
   }
 
   async MakeAdd(del: boolean = false): Promise<BuildFormResult> {
 
     const fields = MAKE_FIELDS();
-
     const url_cols = {
       APP_TYPE: "MAKE",
       ID_COL: "id",

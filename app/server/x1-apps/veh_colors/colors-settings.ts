@@ -1,5 +1,5 @@
 import type { ColumnMetadata } from "@codeJ09/design-system/data-table";
-import type { TableActionBtn } from "~/shared/listining-types";
+import type { TableActionBtn } from "~/types/listining-types";
 import type { FormFields } from "~/types/form.types";
 
 export const COLOUR_FIELDS = (): FormFields => {
@@ -35,37 +35,41 @@ export const COLORS_TABLE_CONFIG = {
   },
 };
 
-export const COLORS_TABLE_HEADING: {
-  title: string;
-  actions: TableActionBtn[];
+export const COLOUR_TABLE_ACTION_CONFIG: {
+  heading: {
+    title: string;
+    actions: TableActionBtn[];
+  };
+  rowActions: TableActionBtn[];
 } = {
-  title: "Vehicle Colors",
-  actions: [
+  heading: {
+    title: "Vehicle Colors",
+    actions: [
+      {
+        btn_label: "Add Colour",
+        btn_variant: "primary",
+        route_prefix: "forms",
+        appType: "COLOUR",
+        runType: "ADD_COLOUR",
+      },
+    ],
+  },
+  rowActions: [
     {
-      btn_label: "Add Colour",
-      btn_variant: "primary",
+      btn_label: "Edit",
+      btn_variant: "secondary",
       route_prefix: "forms",
       appType: "COLOUR",
-      runType: "ADD_COLOUR",
+      runType: "EDIT_COLOUR",
+      params: { id: "id" },
+    },
+    {
+      btn_label: "Delete",
+      btn_variant: "danger",
+      route_prefix: "forms",
+      appType: "COLOUR",
+      runType: "DELETE_COLOUR",
+      params: { id: "id" },
     },
   ],
 };
-
-export const COLOUR_TABLE_ROW_ACTIONS: TableActionBtn[] = [
-  {
-    btn_label: "Edit",
-    btn_variant: "secondary",
-    route_prefix: "forms",
-    appType: "COLOUR",
-    runType: "EDIT_COLOUR",
-     params: { id: "id" },
-  },
-  {
-    btn_label: "Delete",
-    btn_variant: "danger",
-    route_prefix: "forms",
-    appType: "COLOUR",
-    runType: "DELETE_COLOUR",
-      params: { id: "id" },
-  },
-];

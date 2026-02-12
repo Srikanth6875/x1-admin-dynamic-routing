@@ -3,14 +3,13 @@ import type { LoaderFunctionArgs } from "react-router";
 import { requireUserSession } from "~/auth-sessions/auth-session.service";
 import { executeWithPermission } from "~/run-engine/reflection-executor.server";
 import { FrameworkRenderer } from "~/client/framework-renderer";
-import type { TableRenderDescriptor } from "~/shared/listining-types";
+import type { TableRenderDescriptor } from "~/types/listining-types";
 
 export type ListingLoaderData = {
   render_response: TableRenderDescriptor;
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-
   const { userId, headers } = await requireUserSession(request).catch(() => {
     throw redirect("/login");
   });
@@ -35,5 +34,4 @@ export default function AdminDynamicRoute() {
   const { render_response } = useLoaderData<ListingLoaderData>();
 
   return <FrameworkRenderer render={render_response as any} />;
-
 }
