@@ -4,7 +4,10 @@ import { createReadableStreamFromReadable } from "@react-router/node";
 import { PassThrough } from "node:stream";
 import type { EntryContext } from "react-router";
 import { isbot } from "isbot";
-import "~/run-engine/reflection-registry.service";
+import { bootstrapReflectionRegistry } from "~/run-engine/reflection-registry.service";
+
+// Server will NOT accept requests until registry is ready
+await bootstrapReflectionRegistry();
 
 const ABORT_DELAY = 5000;
 
@@ -26,6 +29,8 @@ export default function handleRequest(
          * REAL USERS → fastest possible TTFB
          * Send shell immediately, stream Suspense later
          */
+
+        
         onShellReady() {
           if (isBot) return;
 

@@ -1,5 +1,5 @@
 import type { ColumnMetadata } from "@codeJ09/design-system/data-table";
-import type { TableActionBtn } from "~/shared/listining-types";
+import type { TableActionBtn } from "~/types/listining-types";
 import type { FormFields } from "~/types/form.types";
 
 export const TRIM_FIELDS = (): FormFields => {
@@ -53,36 +53,41 @@ export const TRIM_TABLE_CONFIG = {
   },
 };
 
-export const TRIM_TABLE_HEADING: {
-  title: string;
-  actions: TableActionBtn[];
+export const TRIM_TABLE_ACTION_CONFIG: {
+  heading: {
+    title: string;
+    actions: TableActionBtn[];
+  };
+  rowActions: TableActionBtn[];
 } = {
-  title: "Vehicle Trims",
-  actions: [
+  heading: {
+    title: "Vehicle Trims",
+    actions: [
+      {
+        btn_label: "Add Trim",
+        btn_variant: "primary",
+        route_prefix: "forms",
+        appType: "TRIM",
+        runType: "ADD_TRIM",
+      },
+    ],
+  },
+  rowActions: [
     {
-      btn_label: "Add Trim",
-      btn_variant: "primary",
+      btn_label: "Edit",
+      btn_variant: "secondary",
       route_prefix: "forms",
       appType: "TRIM",
-      runType: "ADD_TRIM",
+      runType: "EDIT_TRIM",
+      params: { id: "id" },
+    },
+    {
+      btn_label: "Delete",
+      btn_variant: "danger",
+      route_prefix: "forms",
+      appType: "TRIM",
+      runType: "DELETE_TRIM",
+      params: { id: "id" },
     },
   ],
 };
-export const TRIM_TABLE_ROW_ACTIONS: TableActionBtn[] = [
-  {
-    btn_label: "Edit",
-    btn_variant: "secondary",
-    route_prefix: "forms",
-    appType: "TRIM",
-    runType: "EDIT_TRIM",
-    params: { id: "id" },
-  },
-  {
-    btn_label: "Delete",
-    btn_variant: "danger",
-    route_prefix: "forms",
-    appType: "TRIM",
-    runType: "DELETE_TRIM",
-    params: { id: "id" },
-  },
-];

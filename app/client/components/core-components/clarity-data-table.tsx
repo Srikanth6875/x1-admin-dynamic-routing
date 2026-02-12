@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import { DataTable, type TableDataResponse } from "@codeJ09/design-system/data-table";
 import { ClarityTableHeader } from "~/client/components/helper-components/ClarityTableHeader";
 import { TableColumnActions } from "~/client/components/helper-components/ClarityTableColumnActions";
-import type { ClarityDataTableProps } from "~/shared/listining-types";
+import type { ClarityDataTableProps } from "~/types/listining-types";
 import { editOnUpdateAdapter, handleCellUpdate } from "~/global-actions/Inline-table-actions";
 
 export const ClarityDataTable = <TData extends Record<string, any>,>({ payload }: ClarityDataTableProps<TData>): JSX.Element => {
@@ -19,6 +19,7 @@ export const ClarityDataTable = <TData extends Record<string, any>,>({ payload }
       <ClarityTableHeader tableHeader={table_header} />
 
       <DataTable
+        key={table_unique_id}
         tableId={table_unique_id}
         data={tableData}
         config={{

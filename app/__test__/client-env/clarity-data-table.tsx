@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { ClarityDataTable } from "~/client/components/core-components/clarity-data-table";
-import type { TablePayload } from "~/shared/listining-types";
+import type { TablePayload } from "~/types/listining-types";
 
 // Mock DataTable
 jest.mock("@codeJ09/design-system/data-table", () => ({

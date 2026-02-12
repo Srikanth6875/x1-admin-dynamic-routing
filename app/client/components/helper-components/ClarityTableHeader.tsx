@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { buildActionLink, getActionBtnClasses } from "../core-components/action-helper";
-import type { ClarityTableHeaderProps } from "~/shared/listining-types";
+import type { ClarityTableHeaderProps } from "~/types/listining-types";
 
 export const ClarityTableHeader: React.FC<ClarityTableHeaderProps> = ({ tableHeader, }) => {
     if (!tableHeader) return null;

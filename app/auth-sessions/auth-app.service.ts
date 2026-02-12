@@ -71,4 +71,34 @@ export class AuthService extends ShellEngine {
       .first();
     return row ?? null;
   }
+
+  async getUserAppRunMap(
+    userId: number
+  ): Promise<Map<string, Set<string>>> {
+    const rows = await this.query("users as u")
+      .join("user_role_map as urm", "urm.urm_u_id", "u.u_id")
+      .join("roles as r", "r.r_id", "urm.urm_r_id")
+      .join("role_permissions as rp", "rp.rp_r_id", "r.r_id")
+      .join("app_types as a", "a.a_id", "rp.rp_app_type_id")
+      .join("app_run_types as art", "art.ar_id", "rp.rp_app_run_type_id")
+      .where("u.u_id", userId)
+      .where("r.r_status", 1)
+      .select(
+        "u.u_id",
+        "a.a_type as app_type",
+        "art.ar_type as run_type"
+      );
+
+    const permissionMap = new Map<string, Set<string>>();
+
+    for (const row of rows) {
+      if (!permissionMap.has(row.app_type)) {
+        permissionMap.set(row.app_type, new Set());
+      }
+
+      permissionMap.get(row.app_type)!.add(row.run_type);
+    }
+
+    return permissionMap;
+  }
 }

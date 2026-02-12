@@ -11,9 +11,12 @@ export default [
         ],
     },
     {
-        path: "/list",
+        path: "/",
         file: "routes/admin.layout.tsx",
-        children: [route(":app-type/:run-type", "routes/admin.listing.tsx")],
+        children: [
+            route("list/:app-type/:run-type", "routes/admin.listing.tsx"),
+            route("forms/:app-type/:run-type", "routes/admin.forms.tsx"),
+        ],
     },
     route("actions/inline-edit", "routes/actions/inline-edit.tsx"),
     route("*", "routes/not-found.tsx"),

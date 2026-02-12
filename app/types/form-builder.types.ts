@@ -72,10 +72,10 @@ export interface DeletePayload {
   successKey?: number;
   errorMessage?: string;
 }
-export type DeleteRenderDescriptor = {
+export interface DeleteRenderDescriptor {
   component_type: UIComponentType.DELETE;
   payload: DeletePayload;
-};
+}
 
 
 export interface SaveFormResult {
@@ -85,7 +85,7 @@ export interface SaveFormResult {
 }
 
 export type RenderFormResult =
-   FormRenderDescriptor
+  FormRenderDescriptor
   | DeleteRenderDescriptor;
 
 
@@ -97,19 +97,19 @@ export interface ServerFormPayload {
   title: string;
   fields: Record<string, FormField>;
   initialValues: Record<string, unknown>;
-  app_type: string;         
-  save_action: string;       
-  cancel_action: string;    
-  idColumn: string;          
+  app_type: string;
+  save_action: string;
+  cancel_action: string;
+  idColumn: string;
   mode: "ADD" | "EDIT" | "DELETE";
 }
 
 export interface BuildFormResult {
   component_type: UIComponentType.FORMS;
-  payload: ServerFormPayload;  
+  payload: ServerFormPayload;
 }
 // Frontend renders this
 export type FormRenderDescriptor = {
   component_type: UIComponentType.FORMS;
-  payload: FormPayload;  
+  payload: FormPayload;
 };

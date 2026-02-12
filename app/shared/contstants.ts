@@ -12,19 +12,12 @@ export const sidebarItems = [
   // { name: "Years", appType: "VEH_INFO", runType: "YEAR_LIST" },
   // { name: "Body Types", appType: "VEH_INFO", runType: "BODY_TYPES" },
   // { name: "Int/Ext Colors", appType: "VEH_INFO", runType: "VEH_COLORS" },
-
-  { name: "COLOURS", appType: "COLOUR", runType: "GET_COLOURS" },
-  { name: "MAKES", appType: "MAKE", runType: "GET_MAKES" },
-  { name: "MODELS", appType: "MODEL", runType: "GET_MODELS" },
-  { name: "TRIMS", appType: "TRIM", runType: "GET_TRIMS" },
-  { name: "YEARS", appType: "YEAR", runType: "GET_YEARS" },
-
+  { name: "Makes", appType: "MAKE", runType: "GET_MAKES" },
+  { name: "Model", appType: "MODEL", runType: "GET_MODELS" },
+  { name: "Trim", appType: "TRIM", runType: "GET_TRIMS" },
+  { name: "Int/Ext Colors", appType: "COLOUR", runType: "GET_COLOURS" },
+  { name: "Years", appType: "YEAR", runType: "GET_YEARS" },
 ];
-
-
-
-
-
 
 export const TABLE_NAMES = {
   USERS: "users",

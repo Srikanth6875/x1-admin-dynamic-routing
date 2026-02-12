@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { randomUUID } from "crypto";
-import type { DeepPartial } from "./listining-types";
+import type { DeepPartial } from "../types/listining-types";
 
 export function generateUUID() {
     return randomUUID();

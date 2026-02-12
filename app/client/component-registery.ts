@@ -5,7 +5,7 @@ import { DeleteConfirm } from "./components/forms-components/dynamic_form/Delete
 
 export const UiComponentMap = {
   [UIComponentType.TABLE]: ClarityDataTable,
-   [UIComponentType.FORMS]:DynamicForm,
-    [UIComponentType.DELETE]:DeleteConfirm,   
+  [UIComponentType.FORMS]: DynamicForm,
+  [UIComponentType.DELETE]: DeleteConfirm,
 
 };

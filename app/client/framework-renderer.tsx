@@ -1,5 +1,5 @@
 import { UiComponentMap } from "~/client/component-registery";
-import type { FrameworkRendererProps } from "~/shared/listining-types";
+import type { FrameworkRendererProps } from "~/types/listining-types";
 import type { FormRendererProps } from "~/types/form-builder.types";
 
 export function FrameworkRenderer({ render }: FrameworkRendererProps) {

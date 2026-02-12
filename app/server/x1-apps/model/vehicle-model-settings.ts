@@ -1,5 +1,5 @@
 import type { ColumnMetadata } from "@codeJ09/design-system/data-table";
-import type { TableActionBtn } from "~/shared/listining-types";
+import type { TableActionBtn } from "~/types/listining-types";
 import type { FormFields } from "~/types/form.types";
 
 
@@ -46,37 +46,41 @@ export const MODEL_TABLE_CONFIG = {
   },
 };
 
-export const MODEL_TABLE_HEADING: {
-  title: string;
-  actions: TableActionBtn[];
+export const MODEL_TABLE_ACTION_CONFIG: {
+  heading: {
+    title: string;
+    actions: TableActionBtn[];
+  };
+  rowActions: TableActionBtn[];
 } = {
-  title: "Vehicle Models",
-  actions: [
+  heading: {
+    title: "Vehicle Models",
+    actions: [
+      {
+        btn_label: "Add Model",
+        btn_variant: "primary",
+        route_prefix: "forms",
+        appType: "MODEL",
+        runType: "ADD_MODEL",
+      },
+    ],
+  },
+  rowActions: [
     {
-      btn_label: "Add Model",
-      btn_variant: "primary",
+      btn_label: "Edit",
+      btn_variant: "secondary",
       route_prefix: "forms",
       appType: "MODEL",
-      runType: "ADD_MODEL",
+      runType: "EDIT_MODEL",
+      params: { id: "id" },
+    },
+    {
+      btn_label: "Delete",
+      btn_variant: "danger",
+      route_prefix: "forms",
+      appType: "MODEL",
+      runType: "DELETE_MODEL",
+      params: { id: "id" },
     },
   ],
 };
-
-export const MODEL_TABLE_ROW_ACTIONS: TableActionBtn[] = [
-  {
-    btn_label: "Edit",
-    btn_variant: "secondary",
-    route_prefix: "forms",
-    appType: "MODEL",
-    runType: "EDIT_MODEL",
-    params: { id: "id" },
-  },
-  {
-    btn_label: "Delete",
-    btn_variant: "danger",
-    route_prefix: "forms",
-    appType: "MODEL",
-    runType: "DELETE_MODEL",
-    params: { id: "id" },
-  },
-];
