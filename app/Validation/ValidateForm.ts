@@ -16,22 +16,18 @@ export function validateForm<T extends Record<string, FormField>>(
 
     const label = field.label ?? name.replace(/_/g, " ").toUpperCase();
 
-    // Required check
     if (mode === "submit" && field.required && value.length === 0) {
       errors[name] = `${label} is required`;
       return;
     }
 
-    // Skip further validation if empty
     if (value.length === 0) return;
 
-    // Min length
     if (field.min !== undefined && value.length < field.min) {
       errors[name] = `${label} must be at least ${field.min} characters`;
       return;
     }
 
-    // Max length
     if (field.max !== undefined && value.length > field.max) {
       errors[name] = `${label} must be at most ${field.max} characters`;
       return;

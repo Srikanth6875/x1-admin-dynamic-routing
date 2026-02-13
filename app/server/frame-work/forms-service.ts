@@ -91,6 +91,7 @@ export function handleDbError(
       success: false,
       message: "A record with these values already exists.",
     };
+    
   }
 
   const mainColumn = columns[columns.length - 1];
@@ -111,11 +112,26 @@ export function handleDbError(
 
   let context = "";
   if (columns.length > 1) {
-    const lastColLower = mainColumn.toLowerCase();
-    if (lastColLower.includes("trim") || lastColLower === "trim") {
-      context = " for this Make + Model";
-    } else if (lastColLower.includes("model") || lastColLower === "model") {
-      context = " for this Make";
+    const contextLabels: string[] = [];
+    
+    for (let i = 0; i < columns.length - 1; i++) {
+      const col = columns[i];
+      let colLabel = ColumnReplace(col);
+      
+      if (formFields) {
+        const fieldEntry = Object.entries(formFields).find(
+          ([_, def]) => def.db === col,
+        );
+        if (fieldEntry) {
+          colLabel = fieldEntry[1].label?.trim() || colLabel;
+        }
+      }
+      
+      contextLabels.push(colLabel);
+    }
+    
+    if (contextLabels.length > 0) {
+      context = ` for this ${contextLabels.join(" + ")}`;
     }
   }
 
@@ -123,6 +139,7 @@ export function handleDbError(
     success: false,
     message: `${label} "${mainValue}" already exists${context}`,
   };
+  
 }
 
 function extractColumnsAndValues(detail?: string): {
