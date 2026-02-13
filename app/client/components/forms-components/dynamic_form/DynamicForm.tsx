@@ -30,9 +30,10 @@ type DynamicFormProps = {
 };
 
 const MemoizedField = memo(
-  ({ name, field, value, error, onChange, onBlur }: any) => (
+  ({ name, field, value, error, onChange, onBlur, fieldRef }: any) => (
     <div className="w-full">
       <FieldFactory
+        ref={(el) => fieldRef(name, el)}
         field={{ name, ...field }}
         value={value}
         onChange={onChange}
@@ -75,8 +76,10 @@ export const DynamicForm = memo(function DynamicForm({
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showTopError, setShowTopError] = useState(false);
 
   const fieldRefs = useRef<Record<string, HTMLElement | null>>({});
+  const messageRef = useRef<HTMLDivElement>(null);
   const showSuccessOverlay = success;
 
   const formIdentity = useMemo(() => {
@@ -89,7 +92,27 @@ export const DynamicForm = memo(function DynamicForm({
     setTouched({});
     setSubmitted(false);
     setIsSubmitting(false);
+    setShowTopError(false);
   }, [formIdentity]);
+
+ useEffect(() => {
+  if (errorMessage && !success) {
+    setIsSubmitting(false);
+    setShowTopError(true);
+
+    if (messageRef.current) {
+      messageRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      messageRef.current.classList.remove("animate-shake"); // reset
+      void messageRef.current.offsetWidth; // force reflow
+      messageRef.current.classList.add("animate-shake");
+
+      setTimeout(() => {
+        messageRef.current?.classList.remove("animate-shake");
+      }, 1000);
+    }
+  }
+}, [errorMessage, success, isSubmitting]);
+
 
   const uiFields = useMemo(() => {
     if (!fields) return [];
@@ -113,7 +136,10 @@ export const DynamicForm = memo(function DynamicForm({
       const { [name]: _, ...rest } = prev;
       return rest;
     });
-  }, []);
+    if (showTopError) {
+      setShowTopError(false);
+    }
+  }, [showTopError]);
 
   const handleBlur = useCallback(
     (name: string) => {
@@ -147,7 +173,10 @@ export const DynamicForm = memo(function DynamicForm({
     },
     [fields, values, onSubmit],
   );
-  console.log("FORM STATE:", { title, values });
+
+  const setFieldRef = useCallback((name: string, element: HTMLElement | null) => {
+    fieldRefs.current[name] = element;
+  }, []);
 
   return (
     <div className="flex justify-center bg-gray-100 p-4 min-h-screen relative">
@@ -156,9 +185,13 @@ export const DynamicForm = memo(function DynamicForm({
         noValidate
         className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-10"
       >
-        {errorMessage && <Message success={false} title={errorMessage} />}
-
         <h1 className="text-xl font-bold mb-8 text-left text-black">{title}</h1>
+
+        {showTopError && errorMessage && (
+          <div ref={messageRef} className="mb-6">
+            <Message success={false} title={errorMessage} />
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-2">
           {uiFields.map(({ name, ...field }) => (
@@ -170,6 +203,7 @@ export const DynamicForm = memo(function DynamicForm({
               error={errors[name]}
               onChange={handleChange}
               onBlur={handleBlur}
+              fieldRef={setFieldRef}
             />
           ))}
         </div>
@@ -192,7 +226,7 @@ export const DynamicForm = memo(function DynamicForm({
             />
           )}
         </div>
-        {/* ── SUCCESS OVERLAY ── */}
+
         {showSuccessOverlay && (
           <div className="absolute inset-0 bg-white/90 backdrop-blur-md rounded-lg flex items-center justify-center z-10">
             <div className="text-center p-8">
@@ -218,7 +252,6 @@ export const DynamicForm = memo(function DynamicForm({
               <div className="flex justify-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
-              {/* Optional: auto-redirect message */}
               <p className="mt-4 text-sm text-gray-500">Redirecting to .....</p>
             </div>
           </div>
