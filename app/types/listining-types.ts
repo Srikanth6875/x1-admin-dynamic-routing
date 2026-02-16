@@ -7,7 +7,7 @@ import type {
   DeleteRenderDescriptor,
   FormRenderDescriptor,
 } from "~/types/form-builder.types";
-import type { DetailSection, DetailTable } from "./admin-details.types";
+import type { DetailSection, DetailsRenderDescriptor, DetailTable } from "./admin-details.types";
 
 export type DeepPartial<T> =
   T extends Array<infer U>
@@ -66,19 +66,6 @@ export type ClarityTableHeaderProps = {
 //   render: RenderResult<TData>;
 // };
 
-export interface DetailsPayload {
-  title: string;
-  data: Record<string, unknown>;
-  sections: DetailSection[];
-  tables?: DetailTable[];
-}
-
-/* ------------------ RENDER DESCRIPTOR ------------------ */
-
-export type DetailsRenderDescriptor = {
-  component_type: UIComponentType.DETAILS;
-  payload: DetailsPayload;
-};
 
 export type RenderResult =
   | TableRenderDescriptor

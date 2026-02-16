@@ -12,39 +12,39 @@ export type DetailTableAction = {
 };
 
 export interface DetailsSection {
-    title?: string;
-    columns: number;
-    fields: {
-        key: string;
-        label: string;
-        render?: string;
-        highlight?: boolean;
-    }[];
+  title?: string;
+  columns: number;
+  fields: {
+    key: string;
+    label: string;
+    render?: string;
+    highlight?: boolean;
+  }[];
 }
 
 export interface DetailsTable {
-    title: string;
-    dataKey: string;
-    columns: {
-        key: string;
-        label: string;
-    }[];
-    actions?: any[];
+  title: string;
+  dataKey: string;
+  columns: {
+    key: string;
+    label: string;
+  }[];
+  actions?: any[];
 }
 
 export type BuildDetailsParams =
   | {
-      title: string;
-      data: Record<string, any>;  
-      sections: DetailSection[];
-      tables?: DetailTable[];
-    }
+    title: string;
+    data: Record<string, any>;
+    sections: DetailSection[];
+    tables?: DetailTable[];
+  }
   | {
-      title: string;
-      data: Record<string, any>;   
-      fields: DetailField[];
-      tables?: DetailTable[];
-    };
+    title: string;
+    data: Record<string, any>;
+    fields: DetailField[];
+    tables?: DetailTable[];
+  };
 
 export type DetailField = {
   key: string;
@@ -75,7 +75,7 @@ export type DetailsPayload = {
   data: Record<string, any>;
   fields: DetailField[];
   tables?: DetailTable[];
-  tabs?: DetailTab[]; 
+  tabs?: DetailTab[];
 };
 
 export type BuildDetailsInput = {
@@ -83,7 +83,7 @@ export type BuildDetailsInput = {
   data: Record<string, any>;
   fields: FormFields;
   tables?: DetailTable[];
-  tabs?: DetailTab[]; 
+  tabs?: DetailTab[];
 };
 
 
@@ -91,7 +91,12 @@ export type DetailTableColumn = {
   key: string;
   label: string;
 };
+/* ------------------ RENDER DESCRIPTOR ------------------ */
 
+export type DetailsRenderDescriptor = {
+  component_type: UIComponentType.DETAILS;
+  payload: DetailsPayload;
+};
 
 export type TableAction = {
   label: string;
