@@ -29,6 +29,7 @@ type DynamicFormProps = {
   mode: "ADD" | "EDIT";
 };
 
+//use to prevents re-rendering unchnagedfileds when state chnages
 const MemoizedField = memo(
   ({ name, field, value, error, onChange, onBlur, fieldRef }: any) => (
     <div className="w-full">
@@ -78,13 +79,15 @@ export const DynamicForm = memo(function DynamicForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showTopError, setShowTopError] = useState(false);
 
-  const fieldRefs = useRef<Record<string, HTMLElement | null>>({});
-  const messageRef = useRef<HTMLDivElement>(null);
+  const fieldRefs = useRef<Record<string, HTMLElement | null>>({}); //for focusing fields on error
+  const messageRef = useRef<HTMLDivElement>(null); //for scrolling to top error
   const showSuccessOverlay = success;
 
   const formIdentity = useMemo(() => {
     return `${title}-${initialValues?.id ?? "new"}`;
   }, [title, initialValues]);
+  //Clears form when switching between Add/Edit different records
+  // Prevents showing old data when navigating between records
 
   useEffect(() => {
     setValues(initialValues || {});
@@ -95,24 +98,27 @@ export const DynamicForm = memo(function DynamicForm({
     setShowTopError(false);
   }, [formIdentity]);
 
- useEffect(() => {
-  if (errorMessage && !success) {
-    setIsSubmitting(false);
-    setShowTopError(true);
+  // Error handling top message and shake animation
+  useEffect(() => {
+    if (errorMessage && !success) {
+      setIsSubmitting(false);
+      setShowTopError(true);
 
-    if (messageRef.current) {
-      messageRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      messageRef.current.classList.remove("animate-shake"); // reset
-      void messageRef.current.offsetWidth; // force reflow
-      messageRef.current.classList.add("animate-shake");
+      if (messageRef.current) {
+        messageRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        messageRef.current.classList.remove("animate-shake"); // reset
+        void messageRef.current.offsetWidth; // force reflow
+        messageRef.current.classList.add("animate-shake");
 
-      setTimeout(() => {
-        messageRef.current?.classList.remove("animate-shake");
-      }, 1000);
+        setTimeout(() => {
+          messageRef.current?.classList.remove("animate-shake");
+        }, 1000);
+      }
     }
-  }
-}, [errorMessage, success, isSubmitting]);
-
+  }, [errorMessage, success, isSubmitting]);
 
   const uiFields = useMemo(() => {
     if (!fields) return [];
@@ -129,17 +135,20 @@ export const DynamicForm = memo(function DynamicForm({
       }));
   }, [fields]);
 
-  const handleChange = useCallback((name: string, value: FormFieldValue) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => {
-      if (!prev[name]) return prev;
-      const { [name]: _, ...rest } = prev;
-      return rest;
-    });
-    if (showTopError) {
-      setShowTopError(false);
-    }
-  }, [showTopError]);
+  const handleChange = useCallback(
+    (name: string, value: FormFieldValue) => {
+      setValues((prev) => ({ ...prev, [name]: value }));
+      setErrors((prev) => {
+        if (!prev[name]) return prev;
+        const { [name]: _, ...rest } = prev;
+        return rest;
+      });
+      if (showTopError) {
+        setShowTopError(false);
+      }
+    },
+    [showTopError],
+  );
 
   const handleBlur = useCallback(
     (name: string) => {
@@ -174,9 +183,12 @@ export const DynamicForm = memo(function DynamicForm({
     [fields, values, onSubmit],
   );
 
-  const setFieldRef = useCallback((name: string, element: HTMLElement | null) => {
-    fieldRefs.current[name] = element;
-  }, []);
+  const setFieldRef = useCallback(
+    (name: string, element: HTMLElement | null) => {
+      fieldRefs.current[name] = element;
+    },
+    [],
+  );
 
   return (
     <div className="flex justify-center bg-gray-100 p-4 min-h-screen relative">

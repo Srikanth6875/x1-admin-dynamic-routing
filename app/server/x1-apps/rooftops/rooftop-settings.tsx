@@ -1,6 +1,8 @@
 import type { ColumnMetadata } from "@codeJ09/design-system/data-table";
 import type { TableActionBtn } from "~/types/listining-types";
 import type { FormFields } from "~/types/form.types";
+import type { DetailSection, DetailTable } from "~/types/admin-details.types";
+import { VEHICLE_COLUMNS_CONFIG } from "../vehicles/vehicles-settings";
 
 export const ROOFTOP_TABLE_ACTION_CONFIG: {
   heading: {
@@ -22,6 +24,14 @@ export const ROOFTOP_TABLE_ACTION_CONFIG: {
     ],
   },
   rowActions: [
+    {
+      btn_label: "View",
+      btn_variant: "view",
+      route_prefix: "details",
+      appType: "ROOFTOPS",
+      runType: "ROOFTOP_DETAILS",
+      params: { rt_id: "rt_id" },
+    },
     {
       btn_label: "Edit",
       btn_variant: "secondary",
@@ -51,10 +61,10 @@ export const ROOFTOP_TABLE_CONFIG = {
       placeholder: "Search Rooftops...",
     },
     editing: {
-      enabled: true
-    }
-  }
-}
+      enabled: true,
+    },
+  },
+};
 
 export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
   { key: "rt_dealer_id", label: "Rooftop ID", type: "string" },
@@ -67,12 +77,20 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     filterable: true,
     editable: true,
     editor: {
-      type: 'text',
+      type: "text",
       validation: [
-        { kind: 'required', message: 'RoofTop name is required' },
-        { kind: 'min', value: 3, message: 'Name must be at least 3 characters' },
-        { kind: 'max', value: 50, message: 'Name must be less than 50 characters' },
-      ]
+        { kind: "required", message: "RoofTop name is required" },
+        {
+          kind: "min",
+          value: 3,
+          message: "Name must be at least 3 characters",
+        },
+        {
+          kind: "max",
+          value: 50,
+          message: "Name must be less than 50 characters",
+        },
+      ],
     },
   },
   {
@@ -82,11 +100,19 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     editable: true,
     width: 250,
     editor: {
-      type: 'text',
+      type: "text",
       validation: [
-        { kind: 'required', message: 'Street is required' },
-        { kind: 'min', value: 3, message: 'Name must be at least 3 characters' },
-        { kind: 'max', value: 50, message: 'Name must be less than 50 characters' },
+        { kind: "required", message: "Street is required" },
+        {
+          kind: "min",
+          value: 3,
+          message: "Name must be at least 3 characters",
+        },
+        {
+          kind: "max",
+          value: 50,
+          message: "Name must be less than 50 characters",
+        },
       ],
     },
   },
@@ -97,11 +123,19 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     width: 250,
     editable: true,
     editor: {
-      type: 'text',
+      type: "text",
       validation: [
-        { kind: 'required', message: 'City is required' },
-        { kind: 'min', value: 3, message: 'Name must be at least 3 characters' },
-        { kind: 'max', value: 50, message: 'Name must be less than 50 characters' },
+        { kind: "required", message: "City is required" },
+        {
+          kind: "min",
+          value: 3,
+          message: "Name must be at least 3 characters",
+        },
+        {
+          kind: "max",
+          value: 50,
+          message: "Name must be less than 50 characters",
+        },
       ],
     },
   },
@@ -114,13 +148,17 @@ export const ROOFTOP_COLUMNS_CONFIG: ColumnMetadata[] = [
     width: 250,
     editable: true,
     editor: {
-      type: 'tel',
+      type: "tel",
       validation: [
-        { kind: 'required', message: 'Phone number is required' },
-        { kind: 'pattern', value: '^[0-9]{10}$', message: 'Phone number must be 10 digits' }
+        { kind: "required", message: "Phone number is required" },
+        {
+          kind: "pattern",
+          value: "^[0-9]{10}$",
+          message: "Phone number must be 10 digits",
+        },
       ],
-    }
-  }
+    },
+  },
 ];
 
 export const ROOFTOP_FILEDS = (): FormFields => {
@@ -195,12 +233,31 @@ export const ROOFTOP_FILEDS = (): FormFields => {
       max: 255,
       label: "Email",
     },
-
     website: {
       db: "rt_site",
       type: "url",
       max: 255,
-      label: "Website",
+      label: "URL",
     },
   };
 };
+
+
+export const ROOFTOP_VEHICLE_DETAILS_TABLES: DetailTable[] = [
+  {
+    title: "Vehicles",
+    dataKey: "vehicles",                 
+    columns: VEHICLE_COLUMNS_CONFIG,
+    actions: [
+      {
+        label: "Details",
+        variant: "primary",
+        route_prefix: "details",
+        appType: "VEHICLES",
+        runType: "VEHICLE_DETAILS",
+        params: { veh_vin: "veh_vin" },
+      },
+    ],
+  },
+ 
+];

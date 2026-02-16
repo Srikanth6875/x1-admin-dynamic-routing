@@ -7,21 +7,20 @@ import type {
   DeleteRenderDescriptor,
   FormRenderDescriptor,
 } from "~/types/form-builder.types";
-
-/* ----------------------------- Utils ----------------------------- */
+import type { DetailSection, DetailTable } from "./admin-details.types";
 
 export type DeepPartial<T> =
   T extends Array<infer U>
-  ? Array<U>
-  : T extends object
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : T;
+    ? Array<U>
+    : T extends object
+      ? { [K in keyof T]?: DeepPartial<T[K]> }
+      : T;
 
 /* ------------------------- Action Button -------------------------- */
 
 export type TableActionBtn = {
   btn_label: string;
-  btn_variant?: "primary" | "secondary" | "danger";
+  btn_variant?: "primary" | "secondary" | "danger" | "view";
   route_prefix?: string;
   appType: string;
   runType: string;
@@ -49,7 +48,7 @@ export type TableRenderDescriptor<TData = unknown> = {
 };
 
 export type ClarityDataTableProps<TData = unknown> = {
-  payload: TablePayload<Record<string, any>>
+  payload: TablePayload<Record<string, any>>;
 };
 
 export type ClarityTableHeaderProps = {
@@ -67,10 +66,25 @@ export type ClarityTableHeaderProps = {
 //   render: RenderResult<TData>;
 // };
 
+export interface DetailsPayload {
+  title: string;
+  data: Record<string, unknown>;
+  sections: DetailSection[];
+  tables?: DetailTable[];
+}
+
+/* ------------------ RENDER DESCRIPTOR ------------------ */
+
+export type DetailsRenderDescriptor = {
+  component_type: UIComponentType.DETAILS;
+  payload: DetailsPayload;
+};
+
 export type RenderResult =
   | TableRenderDescriptor
   | FormRenderDescriptor
-  | DeleteRenderDescriptor;
+  | DeleteRenderDescriptor
+  | DetailsRenderDescriptor;
 
 export type FrameworkRendererProps = {
   render: RenderResult;

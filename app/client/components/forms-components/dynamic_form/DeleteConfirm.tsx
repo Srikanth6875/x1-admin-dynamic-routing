@@ -272,7 +272,7 @@ export const DeleteConfirm = memo(function DeleteConfirm({
               <div className="flex items-center justify-center mb-6">
                 <div className="rounded-full bg-red-100 p-5">
                   <svg
-                    className="w-15 h-15 text-red-600"
+                    className="w-10 h-10 text-red-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
