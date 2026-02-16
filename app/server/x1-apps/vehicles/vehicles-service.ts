@@ -57,9 +57,9 @@ export class VehicleService extends FrameWorkAppService {
         this.query.raw("ic.color AS interior_color"),
         "v.veh_ctime",
       ])
-      .whereNull("v.veh_dtime");
+      .whereNull("v.veh_dtime").andWhere("v.veh_active", 1);
 
-    return this.BuildClarifyDataTable({
+    return this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLES,
       columns: VEHICLE_COLUMNS_CONFIG,

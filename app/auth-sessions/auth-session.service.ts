@@ -1,6 +1,8 @@
 import { redirect } from "react-router";
 import { generateUUID } from "~/shared/util-helper";
 import { setSessionDataInRedis, getSessionDataInRedis, deleteSessionInRedis, getSessionIdFromRequest, commitSessionCookie, destroySessionCookie, SESSION_TIMEOUT_MS, } from "~/auth-sessions/user-session-server";
+import { UserAuthService } from "./auth-app.service";
+import { setCachedPermissions } from "./user-policy";
 
 /** Get full session (id + data) */
 export async function getSession(request: Request) {
@@ -9,18 +11,20 @@ export async function getSession(request: Request) {
 
   const data = await getSessionDataInRedis(sessionId);
   if (!data) return null;
-
   return { sessionId, data };
 }
 
 /** Create session after login */
 export async function createUserSession(userId: number, userName: string, redirectTo: string) {
   const sessionId = generateUUID();
+
   const sessionData = {
     userId,
     userName,
     lastActivity: Date.now(),
   };
+  console.log("sessionData", sessionData);
+
   await setSessionDataInRedis(sessionId, sessionData);
 
   return redirect(redirectTo, {
@@ -54,7 +58,6 @@ export async function requireUserSession(request: Request) {
 
   return {
     userId,
-    sessionId,
     headers: {
       "Set-Cookie": await commitSessionCookie(sessionId),
     },

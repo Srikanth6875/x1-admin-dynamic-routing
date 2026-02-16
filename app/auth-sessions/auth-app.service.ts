@@ -72,9 +72,7 @@ export class AuthService extends ShellEngine {
     return row ?? null;
   }
 
-  async getUserAppRunMap(
-    userId: number
-  ): Promise<Map<string, Set<string>>> {
+  async getUserPermissions(userId: number): Promise<Map<string, Set<string>>> {
     const rows = await this.query("users as u")
       .join("user_role_map as urm", "urm.urm_u_id", "u.u_id")
       .join("roles as r", "r.r_id", "urm.urm_r_id")
@@ -90,15 +88,14 @@ export class AuthService extends ShellEngine {
       );
 
     const permissionMap = new Map<string, Set<string>>();
-
     for (const row of rows) {
       if (!permissionMap.has(row.app_type)) {
         permissionMap.set(row.app_type, new Set());
       }
-
       permissionMap.get(row.app_type)!.add(row.run_type);
     }
-
     return permissionMap;
   }
 }
+
+export const UserAuthService = new AuthService();

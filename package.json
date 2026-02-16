@@ -13,7 +13,7 @@
     "test:coverage:open": "jest --coverage && start coverage/lcov-report/index.html"
   },
   "dependencies": {
-    "@codeJ09/design-system": "0.2.12",
+    "@codeJ09/design-system": "0.2.14",
     "@react-router/node": "7.12.0",
     "@react-router/serve": "7.12.0",
     "axios": "^1.13.4",

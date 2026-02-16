@@ -10,8 +10,8 @@ import { assertDeleteAllowed, buildTitle, deleteById, getRecordId, handleDbError
 import type { BuildDetailsInput, BuildDetailsParams, DetailField, DetailTable } from "~/types/admin-details.types";
 
 export abstract class FrameWorkAppService extends ShellEngine {
-    protected async BuildClarifyDataTable<TData extends Record<string, any>>(params: ClarifyDataTableParams): Promise<RenderResult> {
-
+    
+    protected async BuildClarityDataTable<TData extends Record<string, any>>(params: ClarifyDataTableParams): Promise<RenderResult> {
         const { component_type, sqlQuery, table_unique_id, columns, configOverrides = {}, table_header, row_actions = [], } = params;
         const data = await this.executeQuery<TData>(sqlQuery);
 

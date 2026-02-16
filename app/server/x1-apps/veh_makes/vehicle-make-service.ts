@@ -14,7 +14,7 @@ export class MakeAppService extends FrameWorkAppService {
       .select("id", "make", "make_ctime", "make_mtime",)
       .orderBy("id", "desc");
 
-    return await this.BuildClarifyDataTable({
+    return await this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MAKES,
       columns: MAKES_COLUMNS_CONFIG,
