@@ -23,7 +23,7 @@ export class TrimAppService extends FrameWorkAppService {
       .leftJoin({ vm: TABLE_NAMES.VEHICLE_MODEL }, "vm.id", "vt.model_id")
       .orderBy("id", "desc");
 
-    return await this.BuildClarifyDataTable({
+    return await this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_TRIMS,
       columns: TRIM_COLUMNS_CONFIG,

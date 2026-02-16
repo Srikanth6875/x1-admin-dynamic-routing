@@ -59,7 +59,7 @@ export class VehicleService extends FrameWorkAppService {
       ])
       .whereNull("v.veh_dtime");
 
-    return this.BuildClarifyDataTable({
+    return this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLES,
       columns: VEHICLE_COLUMNS_CONFIG,

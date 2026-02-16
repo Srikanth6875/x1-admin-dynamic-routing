@@ -35,7 +35,7 @@ export class RoofTopAppService extends FrameWorkAppService {
       )
       .orderBy("rt_id", "desc");
 
-    return this.BuildClarifyDataTable({
+    return this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.ROOFTOP,
       columns: ROOFTOP_COLUMNS_CONFIG,

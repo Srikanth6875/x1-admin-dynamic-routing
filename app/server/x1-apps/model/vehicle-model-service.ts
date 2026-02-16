@@ -29,7 +29,7 @@ export class ModelAppService extends FrameWorkAppService {
       .leftJoin({ mk: TABLE_NAMES.VEHICLE_MAKE }, "mk.id", "vm.make_id")
       .orderBy("id", "desc");
 
-    return await this.BuildClarifyDataTable({
+    return await this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_MODELS,
       columns: MODEL_COLUMNS_CONFIG,

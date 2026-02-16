@@ -70,12 +70,18 @@ export type DetailTab = {
   };
 };
 
-export type DetailsPayload = {
+export interface DetailsPayload {
   title: string;
   data: Record<string, any>;
   fields: DetailField[];
   tables?: DetailTable[];
-  tabs?: DetailTab[]; 
+  tabs?: DetailTab[];
+}
+/* ------------------ RENDER DESCRIPTOR ------------------ */
+
+export type DetailsRenderDescriptor = {
+  component_type: UIComponentType.DETAILS;
+  payload: DetailsPayload;
 };
 
 export type BuildDetailsInput = {

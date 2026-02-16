@@ -14,7 +14,7 @@ export class ColourAppService extends FrameWorkAppService {
       .select("id", "color", "ctime", "mtime",)
       .orderBy("id", "desc");
 
-    return await this.BuildClarifyDataTable({
+    return await this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_COLORS,
       columns: COLORS_COLUMNS_CONFIG,

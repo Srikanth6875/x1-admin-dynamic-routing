@@ -25,7 +25,7 @@ export class YearAppService extends FrameWorkAppService {
     )
     .orderBy("id","desc");
     
-    return await this.BuildClarifyDataTable({
+    return await this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_YEARS,
       columns: YEAR_COLUMNS_CONFIG,

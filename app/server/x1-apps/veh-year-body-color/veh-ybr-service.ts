@@ -6,7 +6,7 @@ import { BODY_TYPE_COLUMNS_CONFIG, BODY_TYPE_TABLE_CONFIG, BODY_TYPE_TABLE_HEADI
 export class VehicleYearBodyColorService extends FrameWorkAppService {
   async YearList() {
     const sqlQuery = this.query({ vm: TABLE_NAMES.VEHICLE_YEAR }).select("id", "year", "ctime", "mtime",);
-    return await this.BuildClarifyDataTable({
+    return await this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_YEARS,
       columns: YEAR_COLUMNS_CONFIG,
@@ -19,7 +19,7 @@ export class VehicleYearBodyColorService extends FrameWorkAppService {
   async BodyTypeList() {
     const sqlQuery = this.query({ vm: TABLE_NAMES.VEHICLE_BODY_TYPE }).select("id", "body_type", "ctime", "mtime",);
 
-    return await this.BuildClarifyDataTable({
+    return await this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_BODY_TYPES,
       columns: BODY_TYPE_COLUMNS_CONFIG,
@@ -32,7 +32,7 @@ export class VehicleYearBodyColorService extends FrameWorkAppService {
   async VehColorList() {
     const sqlQuery = this.query({ vm: TABLE_NAMES.VEHICLE_COLOR }).select("id", "color", "ctime", "mtime",);
 
-    return await this.BuildClarifyDataTable({
+    return await this.BuildClarityDataTable({
       sqlQuery,
       table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.VEHICLE_COLORS,
       columns: COLORS_COLUMNS_CONFIG,
