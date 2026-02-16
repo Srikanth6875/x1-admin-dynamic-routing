@@ -1,6 +1,6 @@
 import type React from "react";
 import { Link } from "react-router";
-import { SquarePen, Trash2 } from "lucide-react";
+import { SquarePen, Trash2, Eye } from "lucide-react";
 import type { TableActionBtn } from "~/types/listining-types";
 
 type TableColumnActionsProps<TData> = {
@@ -30,6 +30,8 @@ const ActionIcon = ({ variant }: { variant?: string }) => {
   switch (variant) {
     case "danger":
       return <Trash2 size={18} strokeWidth={1.8} />;
+    case "view":
+      return <Eye size={18} strokeWidth={1.8} />;
     case "secondary":
     default:
       return <SquarePen size={18} strokeWidth={1.8} />;
@@ -47,12 +49,19 @@ export const TableColumnActions = <TData extends Record<string, any>>({
   return (
     <div className="flex items-center gap-2">
       {actions.map((action, index) => {
+        let variantStyle = "";
         const isDanger = action.btn_variant === "danger";
+        const isView = action.btn_variant === "view";
         const baseStyle =
-          "flex h-7 w-7 items-center justify-center rounded-xl border transition-all duration-200";
-        const variantStyle = isDanger
-          ? "border-red-400/50 text-red-500 hover:border-red-500 hover:text-red-600 hover:shadow-[0_0_0_3px_rgba(239,68,68,0.25)]"
-          : "border-green-400/50 text-green-500 hover:border-green-500 hover:text-green-600 hover:shadow-[0_0_0_3px_rgba(34,197,94,0.25)]";
+          "flex items-center justify-center p-1 transition-colors duration-200 hover:bg-gray-100";
+
+        if (isDanger) {
+          variantStyle = "text-red-500 hover:text-red-600";
+        } else if (isView) {
+          variantStyle = "text-blue-500 hover:text-blue-600";
+        } else {
+          variantStyle = "text-green-500 hover:text-green-600";
+        }
 
         return (
           <Link
