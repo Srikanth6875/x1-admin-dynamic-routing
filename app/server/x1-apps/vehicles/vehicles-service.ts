@@ -148,6 +148,4 @@ export class VehicleService extends FrameWorkAppService {
       tabs: VEHICLE_DETAILS_TABS,
     });
   }
-
-
 }
