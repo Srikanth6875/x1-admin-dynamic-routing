@@ -1,6 +1,16 @@
 import { redirect } from "react-router";
 import { generateUUID } from "~/shared/util-helper";
-import { setSessionDataInRedis, getSessionDataInRedis, deleteSessionInRedis, getSessionIdFromRequest, commitSessionCookie, destroySessionCookie, SESSION_TIMEOUT_MS, } from "~/auth-sessions/user-session-server";
+import {
+  setSessionDataInRedis,
+  getSessionDataInRedis,
+  deleteSessionInRedis,
+  getSessionIdFromRequest,
+  commitSessionCookie,
+  destroySessionCookie,
+  SESSION_TIMEOUT_MS,
+} from "~/auth-sessions/user-session-server";
+import { UserAuthService } from "./auth-app.service";
+import { setCachedPermissions } from "./user-policy";
 
 /** Get full session (id + data) */
 export async function getSession(request: Request) {
@@ -9,18 +19,32 @@ export async function getSession(request: Request) {
 
   const data = await getSessionDataInRedis(sessionId);
   if (!data) return null;
-
   return { sessionId, data };
 }
 
 /** Create session after login */
-export async function createUserSession(userId: number, userName: string, redirectTo: string) {
+export async function createUserSession(
+  userId: number,
+  userName: string,
+  email: string,
+  redirectTo: string,
+) {
   const sessionId = generateUUID();
+
+  const permissionMap = await UserAuthService.getUserPermissions(userId);
+
   const sessionData = {
     userId,
     userName,
+    email,
+    permissions: Object.fromEntries(
+      Array.from(permissionMap.entries()).map(([k, v]) => [k, Array.from(v)]),
+    ),
     lastActivity: Date.now(),
   };
+
+  console.log("sessionData", sessionData);
+
   await setSessionDataInRedis(sessionId, sessionData);
 
   return redirect(redirectTo, {
@@ -35,11 +59,9 @@ export async function requireUserSession(request: Request) {
   if (!session) throw redirect("/login");
 
   const { sessionId, data } = session;
-  const { userId, userName, lastActivity } = data;
   const now = Date.now();
 
-  // Expired
-  if (!lastActivity || now - lastActivity > SESSION_TIMEOUT_MS) {
+  if (!data.lastActivity || now - data.lastActivity > SESSION_TIMEOUT_MS) {
     await deleteSessionInRedis(sessionId);
 
     throw redirect("/login", {
@@ -48,16 +70,21 @@ export async function requireUserSession(request: Request) {
       },
     });
   }
-  // Refresh TTL + last activity
-  const updatedData = { userId, userName, lastActivity: now };
+
+  const updatedData = {
+    ...data,
+    lastActivity: now,
+  };
+
   await setSessionDataInRedis(sessionId, updatedData);
 
+  await commitSessionCookie(sessionId);
+
   return {
-    userId,
-    sessionId,
-    headers: {
-      "Set-Cookie": await commitSessionCookie(sessionId),
-    },
+    userId: data.userId,
+    userName: data.userName,
+    email: data.email,
+    permissions: data.permissions,
   };
 }
 

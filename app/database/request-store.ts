@@ -13,8 +13,7 @@ export interface RequestStoreData {
   formData: Record<string, unknown>;
 
   /** Parsed query string (?a=1&b=2) */
-  query: Record<string, string>;
-}
+query: Record<string, string | string[]>;}
 
 /**
  * RequestStore

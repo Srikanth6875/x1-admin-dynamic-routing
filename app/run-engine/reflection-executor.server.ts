@@ -1,12 +1,11 @@
 import { ReflectionRegistry } from "~/run-engine/reflection-registry.service";
-import { AuthService } from "~/auth-sessions/auth-app.service";
+import { UserAuthService } from "~/auth-sessions/auth-app.service";
 import type { ExecuteWithPermission } from "~/types/listining-types";
 
 type Permission = { class_Name: string; class_Method_Name: string; } | null;
 
 async function getUserExecutionPermission(userId: number, appType: string, runType?: string) {
-  const auth = new AuthService();
-  return auth.checkUserPermission(userId, appType, runType);
+  return UserAuthService.checkUserPermission(userId, appType, runType);
 }
 
 function assertPermission(permission: Permission) {

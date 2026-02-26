@@ -7,7 +7,7 @@ import type {
   DeleteRenderDescriptor,
   FormRenderDescriptor,
 } from "~/types/form-builder.types";
-import type { DetailField, DetailSection, DetailsRenderDescriptor, DetailTab, DetailTable } from "./admin-details.types";
+import type { DetailsRenderDescriptor } from "./admin-details.types";
 
 export type DeepPartial<T> =
   T extends Array<infer U>
@@ -20,7 +20,7 @@ export type DeepPartial<T> =
 
 export type TableActionBtn = {
   btn_label: string;
-  btn_variant?: "primary" | "secondary" | "danger" | "view";
+  btn_variant?: "primary" | "secondary" | "danger" | "view" | "outline";
   route_prefix?: string;
   appType: string;
   runType: string;
@@ -57,6 +57,14 @@ export type ClarityTableHeaderProps = {
     actions?: TableActionBtn[];
   };
 };
+
+/* ------------------------ Framework Types ------------------------- */
+
+// export type RenderResult<TData = unknown> = TableRenderDescriptor<TData>;
+
+// export type FrameworkRendererProps<TData extends Record<string, any> = Record<string, any>> = {
+//   render: RenderResult<TData>;
+// };
 
 export type RenderResult =
   | TableRenderDescriptor

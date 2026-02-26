@@ -17,7 +17,7 @@ export class ImportJobsAppService extends FrameWorkAppService {
                         FROM import_jobs ORDER BY ij_start_time DESC
                         `);
 
-        return this.BuildClarifyDataTable({
+        return this.BuildClarityDataTable({
             sqlQuery,
             table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.IMPORT_JOBS,
             columns: IMPORT_JOB_COLUMNS_CONFIG,
@@ -45,7 +45,7 @@ export class ImportJobsAppService extends FrameWorkAppService {
                 "ifj_error_message"
             ).orderBy("ifj_id", "desc");
 
-        return this.BuildClarifyDataTable({
+        return this.BuildClarityDataTable({
             sqlQuery,
             table_unique_id: CLARITY_DATA_TABLE_UNIQUE_IDS.IMPORT_FILE_JOBS,
             columns: IMPORT_FILE_JOB_COLUMNS_CONFIG,

@@ -20,7 +20,7 @@ export const ROOFTOP_TABLE_ACTION_CONFIG: {
         route_prefix: "forms",
         appType: "ROOFTOPS",
         runType: "ADD_ROOFTOP",
-      },
+      }
     ],
   },
   rowActions: [
@@ -47,7 +47,7 @@ export const ROOFTOP_TABLE_ACTION_CONFIG: {
       appType: "ROOFTOPS",
       runType: "DELETE_ROOFTOP",
       params: { rt_id: "rt_id" },
-    },
+    }
   ],
 };
 
@@ -261,3 +261,4 @@ export const ROOFTOP_VEHICLE_DETAILS_TABLES: DetailTable[] = [
   },
  
 ];
+

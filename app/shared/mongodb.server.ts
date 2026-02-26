@@ -2,7 +2,7 @@ import { MongoClient, Db } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
 
-const uri = process.env.MONGODB_URI || "mongodb://x1dbuser:x1db123987@64.225.36.132:27017/x1_db";
+const uri = process.env.MONGODB_URI || "mongodb://x1dbuser:x1db123987@10.0.2.15:27017/x1_db";
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;

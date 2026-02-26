@@ -14,7 +14,8 @@ export const COLOUR_FIELDS = (): FormFields => {
       db: "color",
       type: "text",
       required: true,
-      max: 250,
+      min:2, 
+        max: 250,
       label: "Colour",
     },
   };

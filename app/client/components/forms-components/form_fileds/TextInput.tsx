@@ -1,9 +1,11 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
+import { TextField, Label, Input, FieldError } from "react-aria-components";
+import { Eye, EyeOff } from "lucide-react";
 
 type TextInputProps = {
   name: string;
   label?: string;
-  value: string | number;
+  value?: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (name: string) => void;
   type?: "text" | "email" | "password" | "number" | "tel" | "url" | "phone";
@@ -11,6 +13,7 @@ type TextInputProps = {
   placeholder?: string;
   readOnly?: boolean;
   error?: string;
+  autoComplete?: string;
 };
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
@@ -26,47 +29,89 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       placeholder,
       readOnly = false,
       error,
+      autoComplete,
     },
     ref,
   ) => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    const isPassword = type === "password";
+
+    const inputType = isPassword
+      ? showPassword
+        ? "text"
+        : "password"
+      : type === "phone"
+        ? "tel"
+        : type;
+
+    const autoCompleteValue =
+      autoComplete ??
+      (type === "password"
+        ? "new-password"
+        : type === "email"
+          ? "email"
+          : type === "tel" || type === "phone"
+            ? "tel"
+            : "off");
+
     return (
-      <div className="mb-1">
-        <label htmlFor={name} className="block mb-1 font-medium text-gray-700">
-          {label} {required && <span className="text-red-500">*</span>}
-        </label>
-        <input
-          ref={ref}
-          id={name}
-          name={name}
-          type={type}
-          value={value}
-          onChange={onChange}
-          onBlur={() => onBlur?.(name)}
-          required={required}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          aria-invalid={!!error}
-          className={`w-64 px-1 py-1 border rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors
-          ${error ? "border-red-500 bg-red-50 ring-2 ring-red-200" : "border-gray-400"}
-          ${readOnly ? "bg-gray-100 cursor-not-allowed" : "bg-white"}`}
-        />
-        {error && (
-          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-            <svg
-              className="w-4 h-4 flex-shrink-0"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {error}
-          </p>
+      <TextField
+        name={name}
+        value={String(value ?? "")}
+        onChange={(val) =>
+          onChange({
+            target: { name, value: val },
+          } as React.ChangeEvent<HTMLInputElement>)
+        }
+        onBlur={() => onBlur?.(name)}
+        isRequired={required}
+        isReadOnly={readOnly}
+        isInvalid={!!error}
+        className="mb-4 flex flex-col"
+      >
+        {label && (
+          <Label className="mb-1 font-medium text-gray-700">
+            {label} {required && <span className="text-red-500">*</span>}
+          </Label>
         )}
-      </div>
+
+        <div className="relative w-64">
+          <Input
+            ref={ref}
+            type={inputType}
+            placeholder={placeholder}
+            autoComplete={autoCompleteValue}
+            className={`w-full px-3 py-2 pr-10 border rounded-md text-gray-900
+              focus:outline-none focus:ring-2 focus:ring-blue-400 transition
+              ${
+                error
+                  ? "border-red-500 bg-red-50 ring-2 ring-red-200"
+                  : "border-gray-300"
+              }
+              ${readOnly ? "bg-gray-100 cursor-not-allowed" : "bg-white"}`}
+          />
+
+          {isPassword && (
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute right-2 top-1/2 -translate-y-1/2
+                text-gray-500 hover:text-gray-700
+                focus:outline-none
+                focus-visible:outline focus-visible:outline-1 focus-visible:outline-blue-400
+                transition"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          )}
+        </div>
+
+        {error && (
+          <FieldError className="mt-1 text-sm text-red-600">{error}</FieldError>
+        )}
+      </TextField>
     );
   },
 );

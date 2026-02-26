@@ -48,7 +48,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ${error ? "border-red-500 bg-red-50 ring-2 ring-red-200" : "border-gray-300"}
           ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white"}`}
         >
-          <option value="">Select an option</option>
+          <option value="">Select an {label}</option>
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}

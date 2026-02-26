@@ -26,9 +26,12 @@ export const loader = async ({
   request,
   params,
 }: LoaderFunctionArgs): Promise<LoaderData> => {
-  const urlParams = Object.fromEntries(
-    new URL(request.url).searchParams.entries(),
-  );
+  const searchParams = new URL(request.url).searchParams;
+  const urlParams: Record<string, string | string[]> = {};
+  for (const key of searchParams.keys()) {
+    const values = searchParams.getAll(key);
+    urlParams[key] = values.length > 1 ? values : values[0];
+  }
 
   return requestStore.run(
     {
@@ -85,6 +88,7 @@ export async function action({
 }: ActionFunctionArgs): Promise<ActionData> {
   const formData = await request.formData();
   const formDataObj = formDataToObject(formData);
+  console.log("formDataObj--", formDataObj);
 
   return requestStore.run(
     {
@@ -143,12 +147,16 @@ export default function FormRenderingPage() {
 
   useEffect(() => {
     if (actionData?.success) {
-      navigate(listPath, {
-        state: {
-          successMessage: actionData.message,
-          fromForm: true,
-        },
-      });
+      const timer = setTimeout(() => {
+        navigate(listPath, {
+          state: {
+            successMessage: actionData.message,
+            fromForm: true,
+          },
+        });
+      }, 1000); // 1 seconds delayy
+
+      return () => clearTimeout(timer);
     }
   }, [actionData?.success, navigate, listPath, actionData?.message]);
 

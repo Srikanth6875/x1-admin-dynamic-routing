@@ -1,23 +1,27 @@
 import React, { forwardRef } from "react";
-import type { ChangeEvent } from "react";
+import {
+  Checkbox as AriaCheckbox,
+  FieldError,
+  Label,
+} from "react-aria-components";
 
 export type CheckboxProps = {
   name: string;
   label?: string;
-  checked: boolean;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  value: 1 | 0; // <-- store 1 or 0 directly
+  onChange: (value: 1 | 0) => void;
   onBlur?: (name: string) => void;
   required?: boolean;
   error?: string;
   disabled?: boolean;
 };
 
-export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
+export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(
   (
     {
       name,
       label,
-      checked,
+      value,
       onChange,
       onBlur,
       required = false,
@@ -26,49 +30,75 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     },
     ref
   ) => {
+    const isSelected = value === 1; // DB 1 → checked
+
     return (
-      <div className="mb-4">
-        <label
-          htmlFor={name}
-          className={`inline-flex items-center select-none ${
-            disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-          }`}
-        >
-          <input
-            ref={ref}
-            id={name}
-            name={name}
-            type="checkbox"
-            checked={checked}
-            onChange={onChange}
-            onBlur={() => onBlur?.(name)}
-            required={required}
-            disabled={disabled}
-            aria-invalid={!!error}
-            className={`
-            h-5 w-5 rounded-bl-lg border-2
-            transition-colors duration-200 ease-in-out
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400
-            ${error ? "border-red-500 ring-2 ring-red-200" : ""}
-            ${checked
-                ? "bg-teal-600 border-teal-600 shadow-lg"
-                : "bg-white border-gray-300 hover:border-teal-500"}
-          `}
-            style={{ boxShadow: checked ? "0 0 6px rgba(22, 163, 74, 0.6)" : undefined }}
-          />
-          <span className="ml-2 text-gray-900">
-            {label} {required && <span className="text-red-500">*</span>}
-          </span>
-        </label>
-        {error && (
-          <p className="mt-1 text-sm text-red-600 ml-7 flex items-center gap-1">
-            <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-            {error}
-          </p>
+      <AriaCheckbox
+        ref={ref}
+        name={name}
+        isSelected={isSelected}
+        onChange={(selected) => onChange(selected ? 1 : 0)} // convert here
+        onBlur={() => onBlur?.(name)}
+        isRequired={required}
+        isDisabled={disabled}
+        isInvalid={!!error}
+        className="flex flex-col mb-4"
+      >
+        {({ isSelected, isDisabled }) => (
+          <>
+            <Label
+              className={`inline-flex items-center gap-2 select-none ${
+                isDisabled
+                  ? "cursor-not-allowed opacity-50"
+                  : "cursor-pointer"
+              }`}
+            >
+              <div
+                className={`
+                  h-5 w-5 border-2 rounded-md flex items-center justify-center
+                  transition-all duration-200
+                  ${
+                    error
+                      ? "border-red-500 ring-2 ring-red-200"
+                      : isSelected
+                      ? "bg-teal-600 border-teal-600"
+                      : "bg-white border-gray-300"
+                  }
+                `}
+              >
+                {isSelected && (
+                  <svg
+                    className="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                )}
+              </div>
+
+              <span className="text-gray-900">
+                {label}
+                {required && (
+                  <span className="text-red-500 ml-1">*</span>
+                )}
+              </span>
+            </Label>
+
+            {error && (
+              <FieldError className="mt-1 text-sm text-red-600 ml-7">
+                {error}
+              </FieldError>
+            )}
+          </>
         )}
-      </div>
+      </AriaCheckbox>
     );
   }
 );

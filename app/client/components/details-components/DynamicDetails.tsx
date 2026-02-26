@@ -64,7 +64,6 @@ export function DynamicDetails({ payload }: Props) {
               }
 
               const url = `/${action.route_prefix}/${action.appType}/${action.runType}?${params.toString()}`;
-
               const baseStyle =
                 "px-3 py-1 text-xs rounded-lg transition shadow";
 
@@ -254,7 +253,7 @@ export function DynamicDetails({ payload }: Props) {
               const { tableData, builtColumns } = buildTable(table);
 
               return (
-                <div key={idx} className="mt-6">
+                <div key={idx} className="mt-2">
                   <h2 className="text-2xl font-semibold mb-4">{table.title}</h2>
 
                   <DataTable data={tableData} columns={builtColumns} />

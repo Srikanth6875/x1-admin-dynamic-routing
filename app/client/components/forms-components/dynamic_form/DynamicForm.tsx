@@ -15,6 +15,9 @@ import type {
   FormValues,
 } from "~/types/form.types";
 import { validateForm } from "~/Validation/ValidateForm";
+import { useNavigate } from "react-router";
+
+const FULL_WIDTH_TYPES = new Set(["picklist", "textarea", "groupedruntype"]);
 
 type DynamicFormProps = {
   fields: FormFields;
@@ -29,7 +32,6 @@ type DynamicFormProps = {
   mode: "ADD" | "EDIT";
 };
 
-//use to prevents re-rendering unchnagedfileds when state chnages
 const MemoizedField = memo(
   ({ name, field, value, error, onChange, onBlur, fieldRef }: any) => (
     <div className="w-full">
@@ -78,7 +80,7 @@ export const DynamicForm = memo(function DynamicForm({
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showTopError, setShowTopError] = useState(false);
-
+  const navigate = useNavigate();
   const fieldRefs = useRef<Record<string, HTMLElement | null>>({}); //for focusing fields on error
   const messageRef = useRef<HTMLDivElement>(null); //for scrolling to top error
   const showSuccessOverlay = success;
@@ -86,8 +88,6 @@ export const DynamicForm = memo(function DynamicForm({
   const formIdentity = useMemo(() => {
     return `${title}-${initialValues?.id ?? "new"}`;
   }, [title, initialValues]);
-  //Clears form when switching between Add/Edit different records
-  // Prevents showing old data when navigating between records
 
   useEffect(() => {
     setValues(initialValues || {});
@@ -98,7 +98,6 @@ export const DynamicForm = memo(function DynamicForm({
     setShowTopError(false);
   }, [formIdentity]);
 
-  // Error handling top message and shake animation
   useEffect(() => {
     if (errorMessage && !success) {
       setIsSubmitting(false);
@@ -109,8 +108,8 @@ export const DynamicForm = memo(function DynamicForm({
           behavior: "smooth",
           block: "start",
         });
-        messageRef.current.classList.remove("animate-shake"); // reset
-        void messageRef.current.offsetWidth; // force reflow
+        messageRef.current.classList.remove("animate-shake"); 
+        void messageRef.current.offsetWidth; 
         messageRef.current.classList.add("animate-shake");
 
         setTimeout(() => {
@@ -132,22 +131,95 @@ export const DynamicForm = memo(function DynamicForm({
         min: f.min,
         max: f.max,
         options: f.options ?? [],
+        readOnly: f.readOnly ?? f.disabled ?? false,
+        allLabel: f.allLabel,
+        selectedLabel: f.selectedLabel,
+        appTypeOptions: f.groupedBy
+          ? (fields[f.groupedBy]?.options ?? [])
+          : (f.appTypeOptions ?? []),
+        fullWidth: FULL_WIDTH_TYPES.has(f.type),
       }));
   }, [fields]);
 
+  // const handleChange = useCallback(
+  //   (name: string, value: FormFieldValue) => {
+  //     setValues((prev) => ({ ...prev, [name]: value }));
+  //     setErrors((prev) => {
+  //       if (!prev[name]) return prev;
+  //       const { [name]: _, ...rest } = prev;
+  //       return rest;
+  //     });
+  //     if (showTopError) {
+  //       setShowTopError(false);
+  //     }
+  //   },
+  //   [showTopError],
+  // );
+
   const handleChange = useCallback(
     (name: string, value: FormFieldValue) => {
-      setValues((prev) => ({ ...prev, [name]: value }));
-      setErrors((prev) => {
-        if (!prev[name]) return prev;
-        const { [name]: _, ...rest } = prev;
-        return rest;
+      setValues((prevValues) => {
+        let updatedValues = { ...prevValues, [name]: value };
+        Object.entries(fields).forEach(([childFieldName, childFieldConfig]) => {
+          if (childFieldConfig.groupedBy !== name) return;
+
+          let selectedParentIds: number[] = [];
+          if (Array.isArray(value)) {
+            selectedParentIds = value.map(Number).filter((n) => !isNaN(n));
+          } else if (typeof value === "string") {
+            selectedParentIds = value
+              .split(",")
+              .map((v) => Number(v.trim()))
+              .filter((n) => !isNaN(n));
+          }
+
+          const existingChildValues = Array.isArray(prevValues[childFieldName])
+            ? (prevValues[childFieldName] as (string | number)[])
+            : [];
+
+          const filteredChildValues = existingChildValues.filter((childId) => {
+            const numericId = Number(childId);
+            if (isNaN(numericId)) return false;
+            const option = childFieldConfig.options?.find(
+              (opt) => Number(opt.value) === numericId,
+            );
+            if (option && "app_type_id" in option) {
+              return selectedParentIds.includes(
+                Number((option as any).app_type_id),
+              );
+            }
+            return false;
+          });
+
+          updatedValues = {
+            ...updatedValues,
+            [childFieldName]: filteredChildValues,
+          };
+        });
+        setErrors((prevErrors) => {
+          if (!prevErrors[name]) return prevErrors;
+          const { [name]: _, ...rest } = prevErrors;
+          return rest;
+        });
+
+        if (showTopError) setShowTopError(false);
+        const fieldConfig = fields[name];
+        if (fieldConfig?.reloadOnChange) {
+          const params = new URLSearchParams();
+          Object.entries(updatedValues).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              val.forEach((v) => params.append(key, String(v)));
+            } else if (val !== undefined && val !== null && val !== "") {
+              params.set(key, String(val));
+            }
+          });
+          navigate(`?${params.toString()}`, { replace: true });
+        }
+
+        return updatedValues;
       });
-      if (showTopError) {
-        setShowTopError(false);
-      }
     },
-    [showTopError],
+    [fields, navigate, showTopError],
   );
 
   const handleBlur = useCallback(
@@ -172,9 +244,7 @@ export const DynamicForm = memo(function DynamicForm({
       e.preventDefault();
       setSubmitted(true);
       const submitErrors = validateForm(fields, values, "submit");
-
       setErrors(submitErrors);
-
       if (Object.keys(submitErrors).length === 0) {
         setIsSubmitting(true);
         onSubmit(values);
@@ -205,18 +275,19 @@ export const DynamicForm = memo(function DynamicForm({
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-          {uiFields.map(({ name, ...field }) => (
-            <MemoizedField
-              key={name}
-              name={name}
-              field={field}
-              value={values[name]}
-              error={errors[name]}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              fieldRef={setFieldRef}
-            />
+        <div className="grid grid-cols-2 gap-x-6 gap-y-6">
+          {uiFields.map(({ name, fullWidth, ...field }) => (
+            <div key={name} className={fullWidth ? "col-span-2" : "col-span-1"}>
+              <MemoizedField
+                name={name}
+                field={field}
+                value={values[name]}
+                error={errors[name]}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                fieldRef={setFieldRef}
+              />
+            </div>
           ))}
         </div>
 

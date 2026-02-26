@@ -57,7 +57,7 @@ export class VehicleService extends FrameWorkAppService {
         this.query.raw("ic.color AS interior_color"),
         "v.veh_ctime",
       ])
-      .whereNull("v.veh_dtime");
+      .whereNull("v.veh_dtime").andWhere("v.veh_active", 1);
 
     return this.BuildClarityDataTable({
       sqlQuery,
@@ -66,8 +66,7 @@ export class VehicleService extends FrameWorkAppService {
       configOverrides: VEHICLE_TABLE_META.config,
       component_type: UIComponentType.TABLE,
       table_header: VEHICLE_TABLE_META.heading,
-        row_actions: VEHICLE_TABLE_ACTION_CONFIG.rowActions,
-
+      row_actions: VEHICLE_TABLE_ACTION_CONFIG.rowActions,
     });
   }
 
@@ -148,6 +147,4 @@ export class VehicleService extends FrameWorkAppService {
       tabs: VEHICLE_DETAILS_TABS,
     });
   }
-
-
 }
