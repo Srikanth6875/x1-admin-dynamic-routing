@@ -1,6 +1,6 @@
 import { useActionData, redirect } from "react-router";
 import type { ActionFunction, LoaderFunction } from "react-router";
-import { AuthService } from "~/auth-sessions/auth-app.service";
+import { UserAuthService } from "~/auth-sessions/auth-app.service";
 import { createUserSession, getSession } from "~/auth-sessions/auth-session.service";
 import { LoginForm } from "~/client/components/helper-components/LoginCard";
 
@@ -20,9 +20,7 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const email = (form.get("email")?.toString() || "").trim();
   const password = (form.get("password")?.toString() || "").trim();
-
-  const auth = new AuthService();
-  const user = await auth.validateLogin(email, password);
+  const user = await UserAuthService.validateLogin(email, password);
 
   if (!user) {
     return { error: "Invalid email or password" };
