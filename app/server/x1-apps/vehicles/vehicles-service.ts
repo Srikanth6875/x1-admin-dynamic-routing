@@ -66,8 +66,7 @@ export class VehicleService extends FrameWorkAppService {
       configOverrides: VEHICLE_TABLE_META.config,
       component_type: UIComponentType.TABLE,
       table_header: VEHICLE_TABLE_META.heading,
-        row_actions: VEHICLE_TABLE_ACTION_CONFIG.rowActions,
-
+      row_actions: VEHICLE_TABLE_ACTION_CONFIG.rowActions,
     });
   }
 

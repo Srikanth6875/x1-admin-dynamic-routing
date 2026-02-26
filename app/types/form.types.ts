@@ -18,20 +18,30 @@ export type FieldType =
   | "hidden"
   | "phone"
   | "url"
-  | "guid";
+  | "guid"
+  | "multiselectdropdown"
+  | "picklist"
+  | "groupedruntype";
 
 export interface SelectOption {
   label: string;
   value: string | number;
 }
+
 export type FormFieldValue =
   | string
   | number
   | boolean
   | null
-  | File | undefined 
+  | undefined
+  | File
+  | FileList
   | (string | number | boolean | File)[];
 
+export type Option = {
+  label: string;
+  value: string | number;
+};
 export interface FormField {
   db?: string;
   type: FieldType;
@@ -42,16 +52,27 @@ export interface FormField {
   hidden?: boolean;
   min?: number;
   max?: number;
-  maxLength?:number;
+  maxLength?: number;
   minLength?: number;
   options?: SelectOption[];
   multiple?: boolean;
-  
+  default?: unknown;
+  disabled?: boolean;
+  allLabel?: string;
+  selectedLabel?: string;
+  reloadOnChange?: boolean;
+  groupedBy?: string;
+  appTypeOptions?: Option[];
 }
+
 export interface UIFormField extends FormField {
   name: string;
   label: string;
+  allLabel?: string;
+  selectedLabel?: string;
+  appTypeOptions?: { label: string; value: string | number }[];
 }
+
 export type FormFields = Record<string, FormField>;
 
 export interface FormValues {

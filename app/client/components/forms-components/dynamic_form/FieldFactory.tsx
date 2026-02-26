@@ -9,11 +9,15 @@ import { DatePicker } from "../form_fileds/DatePicker";
 import { TimePicker } from "../form_fileds/TimePicker";
 import { FileUpload } from "../form_fileds/FileUpload";
 import { Switch } from "../form_fileds/Switch";
+import { MultiSelectDropdown } from "../form_fileds/MultiSelectDropdown";
+
 import type {
   FieldType,
   FormFieldValue,
   UIFormField,
 } from "~/types/form.types";
+import { DualListTransfer } from "../form_fileds/PickList";
+import { GroupedRunTypeSelector } from "../form_fileds/GroupedRunTypeSelector";
 
 interface Props {
   field: UIFormField;
@@ -54,9 +58,7 @@ export const FieldFactory = forwardRef<HTMLElement, Props>(
     };
 
     const handleChange = (e: any) => {
-      if (field.type === "checkbox") {
-        onChange(field.name, e.target.checked);
-      } else if (field.type === "multiselect") {
+      if (field.type === "multiselect") {
         onChange(field.name, e);
       } else if (field.type === "file") {
         onChange(field.name, e.target.files);
@@ -118,19 +120,61 @@ export const FieldFactory = forwardRef<HTMLElement, Props>(
             options={field.options || []}
           />
         );
+      case "multiselectdropdown":
+        console.log(`[${field.name}] received value from form:`, value);
+        console.log(`[${field.name}] using fallback/default:`, field.default);
+        return (
+          <MultiSelectDropdown
+            {...commonProps}
+            ref={ref as any}
+            values={(value as (string | number)[]) ?? []}
+            onChange={(vals) => onChange(field.name, vals)}
+            onBlur={() => onBlur(field.name)}
+            options={field.options || []}
+          />
+        );
 
       case "checkbox":
         return (
           <Checkbox
             {...commonProps}
             ref={ref as any}
-            checked={!!value}
-            onChange={handleChange}
+            value={(value as 1 | 0) ?? 0}
+            onChange={(val: 1 | 0) => onChange(field.name, val)}
             onBlur={() => onBlur(field.name)}
           />
         );
-
-      case "radio":
+      case "picklist":
+        return (
+          <DualListTransfer
+            {...commonProps}
+            ref={ref as any}
+            options={field.options || []}
+            values={(value as (string | number)[]) ?? []}
+            onChange={(vals) => onChange(field.name, vals)}
+            onBlur={() => onBlur(field.name)}
+            allLabel={field.allLabel}
+            selectedLabel={field.selectedLabel}
+          />
+        );
+      case "groupedruntype":
+        return (
+          <GroupedRunTypeSelector
+            ref={ref as React.Ref<HTMLDivElement>}
+            name={field.name}
+            label={field.label}
+            options={(field.options ?? []) as any}
+            appTypeOptions={(field.appTypeOptions ?? []) as any}
+            values={(value as (string | number)[]) ?? []}
+            onChange={(vals) => onChange(field.name, vals)}
+            onBlur={onBlur}
+            required={field.required}
+            error={error}
+            readOnly={field.readOnly}
+          />
+        );
+     
+        case "radio":
         return (
           <RadioGroup
             {...commonProps}
@@ -180,8 +224,8 @@ export const FieldFactory = forwardRef<HTMLElement, Props>(
           <Switch
             {...commonProps}
             ref={ref as any}
-            checked={!!value}
-            onChange={(checked) => onChange(field.name, checked)}
+            checked={value === 1}
+            onChange={(checked) => onChange(field.name, checked ? 1 : 0)}
             onBlur={() => onBlur(field.name)}
           />
         );

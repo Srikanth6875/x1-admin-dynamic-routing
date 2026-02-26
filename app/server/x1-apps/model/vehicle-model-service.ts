@@ -7,7 +7,7 @@ import {
   MODEL_COLUMNS_CONFIG,
   MODEL_FIELDS,
   MODEL_TABLE_CONFIG,
-  MODEL_TABLE_ACTION_CONFIG
+  MODEL_TABLE_ACTION_CONFIG,
 } from "./vehicle-model-settings";
 import {
   CLARITY_DATA_TABLE_UNIQUE_IDS,
@@ -16,7 +16,6 @@ import {
 import { UIComponentType } from "~/shared/admin.enums";
 
 export class ModelAppService extends FrameWorkAppService {
-
   async ModelList() {
     const sqlQuery = this.query({ vm: TABLE_NAMES.VEHICLE_MODEL })
       .select(

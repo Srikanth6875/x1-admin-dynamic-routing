@@ -10,16 +10,26 @@ type NavItem = {
 type AppHeaderProps = {
   onToggleSidebar: () => void;
   items: NavItem[];
+  userName: string;
+  email: string;
 };
 
-export function AppHeader({ onToggleSidebar, items }: AppHeaderProps) {
+export function AppHeader({
+  onToggleSidebar,
+  items,
+  userName,
+  email,
+}: AppHeaderProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -61,10 +71,10 @@ export function AppHeader({ onToggleSidebar, items }: AppHeaderProps) {
         </button>
 
         {open && (
-          <div className="absolute right-0 mt-2 w-56 min-h-[160px] rounded-lg bg-white text-gray-800 shadow-xl flex flex-col">
+          <div className="absolute right-0 mt-2 w-56 min-h-[100px] rounded-lg bg-white text-gray-800 shadow-xl flex flex-col">
             <div className="px-4 py-4">
-              <p className="text-sm font-medium">Admin</p>
-              <p className="text-sm text-gray-600">Atamai@gmail.com</p>
+              <p className="text-sm font-medium">{userName}</p>
+              <p className="text-sm text-gray-600">{email}</p>
             </div>
 
             <div className="mt-auto">

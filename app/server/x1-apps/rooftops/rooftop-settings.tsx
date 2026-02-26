@@ -261,3 +261,4 @@ export const ROOFTOP_VEHICLE_DETAILS_TABLES: DetailTable[] = [
   },
  
 ];
+

@@ -1,6 +1,6 @@
 import type React from "react";
 import { Link } from "react-router";
-import { SquarePen, Trash2, Eye } from "lucide-react";
+import { SquarePen, Trash2, Eye, UserCog } from "lucide-react";
 import type { TableActionBtn } from "~/types/listining-types";
 
 type TableColumnActionsProps<TData> = {
@@ -32,13 +32,20 @@ const ActionIcon = ({ variant }: { variant?: string }) => {
       return <Trash2 size={18} strokeWidth={1.8} />;
     case "view":
       return <Eye size={18} strokeWidth={1.8} />;
+    case "outline":
+      return <UserCog size={18} strokeWidth={1.8} />;
     case "secondary":
     default:
       return <SquarePen size={18} strokeWidth={1.8} />;
   }
 };
 
-/* ---------- Component ---------- */
+const VARIANT_STYLES: Record<string, string> = {
+  danger: "text-red-500 hover:text-red-600",
+  view: "text-blue-500 hover:text-blue-600",
+  secondary: "text-green-500 hover:text-green-600",
+  outline: "text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50",
+};
 
 export const TableColumnActions = <TData extends Record<string, any>>({
   actions,
@@ -49,19 +56,12 @@ export const TableColumnActions = <TData extends Record<string, any>>({
   return (
     <div className="flex items-center gap-2">
       {actions.map((action, index) => {
-        let variantStyle = "";
-        const isDanger = action.btn_variant === "danger";
-        const isView = action.btn_variant === "view";
         const baseStyle =
-          "flex items-center justify-center p-1 transition-colors duration-200 hover:bg-gray-100";
+          "flex items-center justify-center p-1 transition-colors duration-200";
 
-        if (isDanger) {
-          variantStyle = "text-red-500 hover:text-red-600";
-        } else if (isView) {
-          variantStyle = "text-blue-500 hover:text-blue-600";
-        } else {
-          variantStyle = "text-green-500 hover:text-green-600";
-        }
+        const variantStyle =
+          VARIANT_STYLES[action.btn_variant ?? "secondary"] ??
+          VARIANT_STYLES.secondary;
 
         return (
           <Link

@@ -61,6 +61,8 @@ export interface BuildFormInput {
   fields: FormFields;
   url_cols: UrlColumns;
   del?: boolean;
+
+  initialValues?: Record<string, unknown>;
 }
 export interface DeletePayload {
   title: string;
@@ -113,3 +115,8 @@ export type FormRenderDescriptor = {
   component_type: UIComponentType.FORMS;
   payload: FormPayload;
 };
+
+export interface RoleMapForm {
+  u_id: number;
+  roles: number[];
+}

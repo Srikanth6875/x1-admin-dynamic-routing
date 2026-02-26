@@ -1,5 +1,5 @@
 import type { FormMode, ServerFormPayload } from "./form-builder.types";
-import type { FormField, FormFieldValue } from "./form.types";
+import type { FormField, FormFieldValue, FormValues } from "./form.types";
 
 export interface FormFields {
   [key: string]: FormFieldValue;

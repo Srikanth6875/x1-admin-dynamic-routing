@@ -4,6 +4,7 @@ export const buildActionLink = (action: TableActionBtn) => {
     return `/${action.route_prefix ?? "list"}/${action.appType}/${action.runType}`;
 };
 
+
 export const getActionBtnClasses = (variant?: TableActionBtn["btn_variant"]) => {
     switch (variant) {
         case "danger":
@@ -22,6 +23,7 @@ export const buildActionLinkwithid = <TData extends Record<string, any>>(
     row: TData
 ) => {
     const basePath = `/${action.route_prefix ?? "list"}/${action.appType}/${action.runType}`;
+
     if (!action.params) return basePath;
 
     const resolvedParams = Object.fromEntries(

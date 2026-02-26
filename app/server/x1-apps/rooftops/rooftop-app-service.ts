@@ -77,7 +77,7 @@ export class RoofTopAppService extends FrameWorkAppService {
     return this.AddRooftop(true);
   }
 
-  async getRooftopDetails(rooftopId: string) {
+  async getRooftopDetails(rooftopId: string | string[]) {
     if (!rooftopId) return null;
     const sqlQuery = this.query(TABLE_NAMES.ROOFTOP)
       .select(
@@ -99,7 +99,7 @@ export class RoofTopAppService extends FrameWorkAppService {
     return this.executeQuery(sqlQuery);
   }
 
-  async getVehiclesByRooftop(rooftopId: string) {
+  async getVehiclesByRooftop(rooftopId: string | string[]) {
     if (!rooftopId) return [];
 
     const sqlQuery = this.query("vehicles as v")

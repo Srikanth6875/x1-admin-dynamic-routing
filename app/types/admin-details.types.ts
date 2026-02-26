@@ -86,7 +86,6 @@ export type BuildDetailsInput = {
   tabs?: DetailTab[];
 };
 
-
 export type DetailTableColumn = {
   key: string;
   label: string;
