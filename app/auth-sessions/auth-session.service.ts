@@ -43,8 +43,6 @@ export async function createUserSession(
     lastActivity: Date.now(),
   };
 
-  console.log("sessionData", sessionData);
-
   await setSessionDataInRedis(sessionId, sessionData);
 
   return redirect(redirectTo, {

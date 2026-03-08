@@ -17,7 +17,12 @@ import type {
 import { validateForm } from "~/Validation/ValidateForm";
 import { useNavigate } from "react-router";
 
-const FULL_WIDTH_TYPES = new Set(["picklist", "textarea", "groupedruntype"]);
+const FULL_WIDTH_TYPES = new Set([
+  "picklist",
+  "textarea",
+  "groupedruntype",
+  "",
+]);
 
 type DynamicFormProps = {
   fields: FormFields;
@@ -108,8 +113,8 @@ export const DynamicForm = memo(function DynamicForm({
           behavior: "smooth",
           block: "start",
         });
-        messageRef.current.classList.remove("animate-shake"); 
-        void messageRef.current.offsetWidth; 
+        messageRef.current.classList.remove("animate-shake");
+        void messageRef.current.offsetWidth;
         messageRef.current.classList.add("animate-shake");
 
         setTimeout(() => {
@@ -138,32 +143,81 @@ export const DynamicForm = memo(function DynamicForm({
           ? (fields[f.groupedBy]?.options ?? [])
           : (f.appTypeOptions ?? []),
         fullWidth: FULL_WIDTH_TYPES.has(f.type),
+        groupedBy: f.groupedBy,
       }));
   }, [fields]);
 
-  // const handleChange = useCallback(
-  //   (name: string, value: FormFieldValue) => {
-  //     setValues((prev) => ({ ...prev, [name]: value }));
-  //     setErrors((prev) => {
-  //       if (!prev[name]) return prev;
-  //       const { [name]: _, ...rest } = prev;
-  //       return rest;
-  //     });
-  //     if (showTopError) {
-  //       setShowTopError(false);
-  //     }
-  //   },
-  //   [showTopError],
-  // );
+  const clearDownstreamFields = useCallback(
+    (
+      changedFieldName: string,
+      currentValues: FormValues,
+      previousValues: FormValues,
+    ): FormValues => {
+      let updated = { ...currentValues };
+
+      const newVal = currentValues[changedFieldName];
+      const oldVal = previousValues[changedFieldName];
+      const newIds = Array.isArray(newVal) ? newVal.map(Number) : [];
+      const oldIds = Array.isArray(oldVal) ? oldVal.map(Number) : [];
+
+      const itemsWereRemoved = oldIds.some((id) => !newIds.includes(id));
+      if (!itemsWereRemoved) return updated;
+
+      Object.entries(fields).forEach(([childName, childConfig]) => {
+        if (childConfig.groupedBy !== changedFieldName) return;
+
+        const existingChild = Array.isArray(updated[childName])
+          ? (updated[childName] as (string | number)[])
+          : [];
+
+        const filtered = existingChild.filter((childId) => {
+          const numericId = Number(childId);
+
+          const option = childConfig.options?.find(
+            (opt) => Number(opt.value) === numericId,
+          );
+
+          if (!option) return false;
+
+          const parentKey = childConfig.groupedBy;
+          if (!parentKey) return true;
+
+          const parentVal = Number((option as any)[parentKey]);
+          return newIds.includes(parentVal);
+        });
+
+        updated[childName] = filtered;
+
+        const prevForChild = {
+          ...updated,
+          [childName]: previousValues[childName],
+        };
+        updated = clearDownstreamFields(childName, updated, prevForChild);
+      });
+
+      return updated;
+    },
+    [fields],
+  );
 
   const handleChange = useCallback(
     (name: string, value: FormFieldValue) => {
       setValues((prevValues) => {
         let updatedValues = { ...prevValues, [name]: value };
+        updatedValues = clearDownstreamFields(name, updatedValues, prevValues);
+
         Object.entries(fields).forEach(([childFieldName, childFieldConfig]) => {
           if (childFieldConfig.groupedBy !== name) return;
+          if (childFieldConfig.type === "groupedruntype") return;
+
+          if (
+            Array.isArray(updatedValues[childFieldName]) &&
+            (updatedValues[childFieldName] as any[]).length === 0
+          )
+            return;
 
           let selectedParentIds: number[] = [];
+
           if (Array.isArray(value)) {
             selectedParentIds = value.map(Number).filter((n) => !isNaN(n));
           } else if (typeof value === "string") {
@@ -180,15 +234,16 @@ export const DynamicForm = memo(function DynamicForm({
           const filteredChildValues = existingChildValues.filter((childId) => {
             const numericId = Number(childId);
             if (isNaN(numericId)) return false;
+
             const option = childFieldConfig.options?.find(
               (opt) => Number(opt.value) === numericId,
             );
-            if (option && "app_type_id" in option) {
-              return selectedParentIds.includes(
-                Number((option as any).app_type_id),
-              );
-            }
-            return false;
+            if (!option || !childFieldConfig.groupedBy) return false;
+
+            const parentKey = childFieldConfig.groupedBy;
+            const parentValue = Number((option as any)[parentKey]);
+
+            return selectedParentIds.includes(parentValue);
           });
 
           updatedValues = {
@@ -196,6 +251,7 @@ export const DynamicForm = memo(function DynamicForm({
             [childFieldName]: filteredChildValues,
           };
         });
+
         setErrors((prevErrors) => {
           if (!prevErrors[name]) return prevErrors;
           const { [name]: _, ...rest } = prevErrors;
@@ -203,13 +259,23 @@ export const DynamicForm = memo(function DynamicForm({
         });
 
         if (showTopError) setShowTopError(false);
+
         const fieldConfig = fields[name];
+
         if (fieldConfig?.reloadOnChange) {
           const params = new URLSearchParams();
           Object.entries(updatedValues).forEach(([key, val]) => {
-            if (Array.isArray(val)) {
-              val.forEach((v) => params.append(key, String(v)));
-            } else if (val !== undefined && val !== null && val !== "") {
+            const fieldCfg = fields[key];
+            if (fieldCfg?.excludeFromUrl) return;
+
+            if (Array.isArray(val) && val.length > 0) {
+              params.set(key, val.join(","));
+            } else if (
+              val !== undefined &&
+              val !== null &&
+              val !== "" &&
+              !Array.isArray(val)
+            ) {
               params.set(key, String(val));
             }
           });
@@ -219,7 +285,7 @@ export const DynamicForm = memo(function DynamicForm({
         return updatedValues;
       });
     },
-    [fields, navigate, showTopError],
+    [fields, navigate, showTopError, clearDownstreamFields],
   );
 
   const handleBlur = useCallback(

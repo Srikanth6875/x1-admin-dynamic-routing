@@ -19,22 +19,13 @@ export const APPS_FIELDS = (): FormFields => {
       label: "App Name",
     },
 
-    xa_label: {
-      db: "xa_label",
+    xa_shortcut: {
+      db: "xa_shortcut",
       type: "text",
       required: true,
       min: 2,
-      max: 150,
-      label: "App Label",
-    },
-
-    xa_base_class: {
-      db: "xa_base_class",
-      type: "text",
-      required: true,
-      min: 2,
-      max: 150,
-      label: "Base Service Class",
+      max: 50,
+      label: "App Shortcut",
     },
 
     xa_status: {
@@ -51,10 +42,9 @@ export const APPS_FIELDS = (): FormFields => {
 
 export const APPS_COLUMNS_CONFIG: ColumnMetadata[] = [
   { key: "xa_id", label: "ID", type: "number" },
-  { key: "xa_name", label: "Code", type: "string" },
-  { key: "xa_label", label: "Label", type: "string" },
-  { key: "xa_base_class", label: "Base Class", type: "string" },
-  { key: "xa_status", label: "Status", type: "number" },
+  { key: "xa_name", label: "App Name", type: "string" },
+  { key: "xa_shortcut", label: "App Shortcut", type: "string" },
+  { key: "xa_status", label: "Status", type: "string" },
   { key: "xa_created_time", label: "Created", type: "string" },
   { key: "xa_last_updated", label: "Updated", type: "string" },
 ];
@@ -62,7 +52,7 @@ export const APPS_COLUMNS_CONFIG: ColumnMetadata[] = [
 export const APPS_TABLE_CONFIG = {
   features: {
     search: {
-      placeholder: "Search Applications...",
+      placeholder: "Search Apps...",
     },
   },
 };
@@ -75,10 +65,10 @@ export const APPS_TABLE_ACTION_CONFIG: {
   rowActions: TableActionBtn[];
 } = {
   heading: {
-    title: "Applications",
+    title: "Apps",
     actions: [
       {
-        btn_label: "Add Application",
+        btn_label: "Add App",
         btn_variant: "primary",
         route_prefix: "forms",
         appType: "APPS",

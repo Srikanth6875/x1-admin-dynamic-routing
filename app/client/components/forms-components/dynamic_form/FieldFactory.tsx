@@ -18,6 +18,7 @@ import type {
 } from "~/types/form.types";
 import { DualListTransfer } from "../form_fileds/PickList";
 import { GroupedRunTypeSelector } from "../form_fileds/GroupedRunTypeSelector";
+import { HierarchicalCheckbox } from "../form_fileds/HierarchicalCheckbox";
 
 interface Props {
   field: UIFormField;
@@ -121,8 +122,6 @@ export const FieldFactory = forwardRef<HTMLElement, Props>(
           />
         );
       case "multiselectdropdown":
-        console.log(`[${field.name}] received value from form:`, value);
-        console.log(`[${field.name}] using fallback/default:`, field.default);
         return (
           <MultiSelectDropdown
             {...commonProps}
@@ -171,10 +170,11 @@ export const FieldFactory = forwardRef<HTMLElement, Props>(
             required={field.required}
             error={error}
             readOnly={field.readOnly}
+            groupedBy={field.groupedBy}
           />
         );
-     
-        case "radio":
+
+      case "radio":
         return (
           <RadioGroup
             {...commonProps}
@@ -183,6 +183,21 @@ export const FieldFactory = forwardRef<HTMLElement, Props>(
             onChange={handleChange}
             onBlur={() => onBlur(field.name)}
             options={field.options || []}
+          />
+        );
+      case "hierarchicalcheckbox":
+        return (
+          <HierarchicalCheckbox
+            ref={ref as any}
+            name={field.name}
+            label={field.label}
+            options={(field.options ?? []) as any}
+            values={(value as (string | number)[]) ?? []}
+            onChange={(vals) => onChange(field.name, vals)}
+            onBlur={() => onBlur(field.name)}
+            required={field.required}
+            error={error}
+            readOnly={field.readOnly}
           />
         );
 

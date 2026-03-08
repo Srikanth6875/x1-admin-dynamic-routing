@@ -3,96 +3,210 @@ import { FrameWorkAppService } from "~/server/frame-work/frame-work-app-service"
 export class RoleRepository extends FrameWorkAppService {
   async getRoleById(roleId: number) {
     return this.query("roles")
-      .select("r_id", "r_name")
+      .select("r_id", "r_name", "r_status")
       .where("r_id", roleId)
       .first();
   }
 
-  async getAssignedPermissions(roleId: number) {
-    return this.query("role_permissions")
-      .select("rp_app_type_id", "rp_app_run_type_id")
-      .where("rp_r_id", roleId);
+  async createRole(data: {
+    r_name: string;
+    r_status: number;
+  }): Promise<number> {
+    const [row] = await this.query("roles")
+      .insert({
+        r_name: data.r_name,
+        r_status: data.r_status,
+      })
+      .returning("r_id");
+
+    return Number(row.r_id);
   }
 
-  async getAllAppTypes() {
-    return this.query("app_types").select("a_id as value", "a_type as label");
-  }
-  
-  async getRunTypesForAppTypes(appTypeIds: number[]) {
-    if (appTypeIds.length === 0) return [];
-    const rows = await this.query("app_run_types")
-      .join("app_types", "app_types.a_id", "app_run_types.ar_a_id")
+  async getAllActiveApps() {
+    return this.query("x_apps")
       .select(
-        "ar_id as value",
-        "ar_type as label",
-        "ar_a_id as app_type_id",
-        "app_types.a_type as app_type_label",
+        "xa_id as app_id",
+        "xa_name as app_name",
+        "xa_shortcut as app_shortcut",
       )
-      .whereIn("ar_a_id", appTypeIds)
-      .orderBy("ar_a_id", "asc")
-      .orderBy("ar_id", "asc");
+      .where("xa_status", 1)
+      .orderBy("xa_name", "asc")
+      .then((rows) =>
+        rows.map((r) => ({
+          app_id: Number(r.app_id),
+          app_name: r.app_name,
+          app_shortcut: r.app_shortcut,
+        })),
+      );
+  }
 
-    return rows.map((rt) => ({
-      label: rt.label,
-      value: rt.value,
-      app_type_id: rt.app_type_id,
-      app_type_label: rt.app_type_label, 
+  async getModulesByApps(appIds: number[]) {
+    if (appIds.length === 0) return [];
+
+    const rows = await this.query({ xm: "x_app_modules" })
+      .join({ xa: "x_apps" }, "xa.xa_id", "xm.xm_xa_id")
+      .select(
+        "xm.xm_id as value",
+        "xm.xm_name",
+        "xm.xm_shortcut",
+        "xa.xa_id as app_id",
+        "xa.xa_name as app_name",
+        "xa.xa_shortcut as app_shortcut",
+      )
+      .where("xm.xm_status", 1)
+      .whereIn("xm.xm_xa_id", appIds)
+      .orderBy("xa.xa_name", "asc")
+      .orderBy("xm.xm_name", "asc");
+
+    return rows.map((m) => ({
+      value: Number(m.value),
+      label: `${m.app_name} (${m.app_shortcut}) — ${m.xm_name} (${m.xm_shortcut})`,
+      apps: Number(m.app_id),
     }));
   }
 
-  async validateRunTypes(runTypeIds: number[], appTypeIds: number[]) {
-    if (runTypeIds.length === 0) return [];
-    return this.query("app_run_types")
-      .select("ar_id", "ar_a_id")
-      .whereIn("ar_id", runTypeIds)
-      .whereIn("ar_a_id", appTypeIds);
+  async getAssignedXPermissions(roleId: number) {
+    const rows = await this.query("x_role_permissions")
+      .select("xrp_xr_id")
+      .where("xrp_role_id", roleId);
+
+    return rows.map((r) => ({ xrp_xr_id: Number(r.xrp_xr_id) }));
   }
 
-  async replaceRolePermissions(
-    roleId: number,
-    validRunTypes: { ar_id: number; ar_a_id: number }[],
-  ) {
-    await this.query("role_permissions").where("rp_r_id", roleId).del();
-    if (validRunTypes.length === 0) return;
-    await this.query("role_permissions").insert(
-      validRunTypes.map((rt) => ({
-        rp_r_id: roleId,
-        rp_app_type_id: rt.ar_a_id,
-        rp_app_run_type_id: rt.ar_id,
-      })),
-    );
-  }
+  async getRunTypesByModules(moduleIds: number[]) {
+    if (moduleIds.length === 0) return [];
 
-  async getRolePermissionsForDetails(roleId: number) {
-    const rows = await this.query("role_permissions as rp")
-      .join("app_types as at", "at.a_id", "rp.rp_app_type_id")
-      .join("app_run_types as art", "art.ar_id", "rp.rp_app_run_type_id")
+    const rows = await this.query({ xr: "x_app_run_types" })
+      .join({ xm: "x_app_modules" }, "xm.xm_id", "xr.xr_xm_id")
+      .join({ xa: "x_apps" }, "xa.xa_id", "xm.xm_xa_id")
       .select(
-        "at.a_id as app_type_id",
-        "at.a_type as app_type",
-        "art.ar_type as run_type",
+        "xr.xr_id as value",
+        "xr.xr_method",
+        "xm.xm_id as modules",
+        "xm.xm_name as module_name",
+        this.query.raw("CONCAT(xm.xm_name, ' - ', xr.xr_method) as label"),
       )
-      .where("rp.rp_r_id", roleId)
-      .orderBy("at.a_type", "asc")
-      .orderBy("art.ar_type", "asc");
+      .where("xr.xr_status", 1)
+      .whereNotNull("xr.xr_xm_id")
+      .whereIn("xr.xr_xm_id", moduleIds)
+      .orderBy("xm.xm_id", "asc")
+      .orderBy("xr.xr_method", "asc");
+
+    return rows.map((r) => ({
+      value: Number(r.value),
+      label: r.label || `${r.module_name} - ${r.xr_method}`,
+      modules: Number(r.modules),
+      app_type_id: String(r.modules),
+    }));
+  }
+
+  async saveRolePermissions(roleId: number, runTypeIds: number[]) {
+    await this.query("x_role_permissions").where("xrp_role_id", roleId).del();
+
+    if (runTypeIds.length > 0) {
+      await this.query("x_role_permissions").insert(
+        runTypeIds.map((id) => ({
+          xrp_role_id: roleId,
+          xrp_xr_id: id,
+          xrp_status: 1,
+        })),
+      );
+    }
+  }
+
+  async updateRole(
+    roleId: number,
+    data: { r_name: string; r_status: number },
+  ): Promise<void> {
+    await this.query("roles").where("r_id", roleId).update({
+      r_name: data.r_name,
+      r_status: data.r_status,
+    });
+  }
+  async getRunTypeDetailsById(runTypeIds: number[]) {
+    if (runTypeIds.length === 0) return [];
+
+    const rows = await this.query({ xr: "x_app_run_types" })
+      .join({ xm: "x_app_modules" }, "xm.xm_id", "xr.xr_xm_id")
+      .join({ xa: "x_apps" }, "xa.xa_id", "xm.xm_xa_id")
+      .select("xr.xr_id", "xr.xr_xm_id", "xm.xm_xa_id")
+      .whereIn("xr.xr_id", runTypeIds)
+
+      .where("xa.xa_status", 1)
+      .where("xm.xm_status", 1)
+      .where("xr.xr_status", 1)
+
+      .whereNotNull("xr.xr_xm_id")
+      .whereNotNull("xm.xm_xa_id");
+
+    return rows.map((r) => ({
+      xr_id: Number(r.xr_id),
+      xr_xm_id: Number(r.xr_xm_id),
+      xm_xa_id: Number(r.xm_xa_id),
+    }));
+  }
+
+  async validateRunTypesForHierarchy(
+    appIds: number[],
+    moduleIds: number[],
+    runTypeIds: number[],
+  ) {
+    if (!runTypeIds.length) return [];
+
+    const rows = await this.query({ xr: "x_app_run_types" })
+      .join({ xm: "x_app_modules" }, "xr.xr_xm_id", "xm.xm_id")
+      .join({ xa: "x_apps" }, "xm.xm_xa_id", "xa.xa_id")
+      .select("xr.xr_id")
+      .whereIn("xr.xr_id", runTypeIds)
+      .whereIn("xa.xa_id", appIds)
+      .whereIn("xm.xm_id", moduleIds)
+      .where("xa.xa_status", 1)
+      .where("xm.xm_status", 1)
+      .where("xr.xr_status", 1);
+
+    return rows.map((r) => Number(r.xr_id));
+  }
+
+  async getRolePermissionXDetails(roleId: number) {
+    const rows = await this.query({ xrp: "x_role_permissions" })
+      .join({ xr: "x_app_run_types" }, "xr.xr_id", "xrp.xrp_xr_id")
+      .join({ xm: "x_app_modules" }, "xm.xm_id", "xr.xr_xm_id")
+      .join({ xa: "x_apps" }, "xa.xa_id", "xm.xm_xa_id")
+      .select(
+        "xa.xa_id",
+        "xa.xa_name",
+        "xm.xm_id",
+        "xm.xm_name",
+        "xr.xr_method",
+      )
+      .where("xrp.xrp_role_id", roleId)
+      .where("xa.xa_status", 1)
+      .where("xm.xm_status", 1)
+      .where("xr.xr_status", 1)
+      .orderBy(["xa.xa_name", "xm.xm_name", "xr.xr_method"]);
 
     const grouped = new Map<
-      number,
-      { app_type: string; run_types: string[] }
+      string,
+      { app_name: string; module_name: string; run_types: string[] }
     >();
 
     for (const row of rows) {
-      if (!grouped.has(row.app_type_id)) {
-        grouped.set(row.app_type_id, {
-          app_type: row.app_type,
+      const key = `${row.xa_id}-${row.xm_id}`;
+
+      if (!grouped.has(key)) {
+        grouped.set(key, {
+          app_name: row.xa_name,
+          module_name: row.xm_name,
           run_types: [],
         });
       }
-      grouped.get(row.app_type_id)!.run_types.push(row.run_type);
+
+      grouped.get(key)!.run_types.push(row.xr_method);
     }
 
     return Array.from(grouped.values()).map((g) => ({
-      app_type: g.app_type,
+      app_name: g.app_name,
+      module_name: g.module_name,
       run_types: g.run_types.join(", "),
     }));
   }

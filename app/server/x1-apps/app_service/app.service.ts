@@ -16,15 +16,19 @@ import {
 } from "./app.settings";
 
 export class AppsService extends FrameWorkAppService {
-    
   async AppsList() {
     const sqlQuery = this.query({ xa: TABLE_NAMES.X_APPS })
       .select(
         "xa_id",
         "xa_name",
-        "xa_label",
-        "xa_base_class",
-        "xa_status",
+        "xa_shortcut",
+        this.query.raw(`
+        CASE 
+          WHEN xa_status = 1 THEN 'Active' 
+          WHEN xa_status = 0 THEN 'Inactive' 
+          ELSE 'Unknown' 
+        END as xa_status
+      `),
         "xa_created_time",
         "xa_last_updated",
       )
@@ -49,8 +53,8 @@ export class AppsService extends FrameWorkAppService {
       ID_COL: "xa_id",
       ACTION: "SAVE_APP",
       CANCEL_ACTION: "GET_APPS",
-      TABLE: "x_apps",
-      HEADER: "Application",
+      TABLE: TABLE_NAMES.X_APPS,
+      HEADER: "Apps",
     };
 
     return this.BuildForm({
@@ -66,7 +70,7 @@ export class AppsService extends FrameWorkAppService {
 
   async AppSave(): Promise<SaveFormResult> {
     const fields = APPS_FIELDS();
-    return this.SaveFormData("x_apps", fields, "xa_id");
+    return this.SaveFormData(TABLE_NAMES.X_APPS, fields, "xa_id");
   }
 
   async AppDelete(): Promise<BuildFormResult> {

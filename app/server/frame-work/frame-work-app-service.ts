@@ -12,7 +12,6 @@ import type {
   BuildFormResult,
   SaveFormResult,
 } from "~/types/form-builder.types";
-import { requestStore } from "~/database/request-store";
 import {
   assertDeleteAllowed,
   buildTitle,
@@ -23,19 +22,13 @@ import {
   prepareDbPayload,
   resolveFormMode,
 } from "./forms-service";
-import type {
-  BuildDetailsInput,
-  BuildDetailsParams,
-  DetailField,
-  DetailTable,
-} from "~/types/admin-details.types";
+import type { BuildDetailsInput } from "~/types/admin-details.types";
 
 export abstract class FrameWorkAppService extends ShellEngine {
   protected async BuildClarityDataTable<TData extends Record<string, any>>(
     params: ClarifyDataTableParams,
   ): Promise<RenderResult> {
     const {
-      component_type,
       sqlQuery,
       table_unique_id,
       columns,
@@ -43,6 +36,7 @@ export abstract class FrameWorkAppService extends ShellEngine {
       table_header,
       row_actions = [],
     } = params;
+
     const data = await this.executeQuery<TData>(sqlQuery);
 
     return {
@@ -70,15 +64,14 @@ export abstract class FrameWorkAppService extends ShellEngine {
     url_cols,
     del = false,
   }: BuildFormInput): Promise<BuildFormResult> {
-    const params = requestStore.tryGet()?.query ?? {};
-    const recordId = getRecordId(params, url_cols.ID_COL);
+    const recordId = getRecordId(this.getQueryParams(), url_cols.ID_COL);
 
     assertDeleteAllowed(del, recordId, url_cols.ID_COL);
 
     const mode = resolveFormMode(del, recordId);
     const title = buildTitle(mode, url_cols.HEADER);
 
-    let initialValues = {};
+    let initialValues: Record<string, unknown> = {};
 
     if (recordId) {
       initialValues = await this.loadInitialValues(
@@ -89,10 +82,7 @@ export abstract class FrameWorkAppService extends ShellEngine {
       );
     }
 
-    initialValues = {
-      ...initialValues,
-      ...customInitialValues,
-    };
+    initialValues = { ...initialValues, ...customInitialValues };
 
     return {
       component_type: UIComponentType.FORMS,
@@ -114,26 +104,28 @@ export abstract class FrameWorkAppService extends ShellEngine {
     fields: FormFields,
     idColumn: string,
   ): Promise<SaveFormResult> {
-    const formData = requestStore.tryGet()?.formData ?? {};
-    console.log("formData--", formData);
-
+    const formData = this.getFormData();
     const recordId = getRecordId(formData, idColumn);
     const isDelete = deleteById(formData);
-
     const payload = prepareDbPayload(fields, idColumn, formData);
+    let id: number | undefined;
 
     try {
       if (isDelete) {
         await this.query(table).where(idColumn, recordId).del();
       } else if (recordId) {
         await this.query(table).where(idColumn, recordId).update(payload);
+        id = recordId;
       } else {
-        await this.query(table).insert(payload);
+        const [inserted] = await this.query(table)
+          .insert(payload)
+          .returning(idColumn);
+
+        id = inserted[idColumn];
       }
 
-      return { success: true };
+      return { success: true, record_id: id };
     } catch (err) {
-      // console.log("err---", err);
       return handleDbError(err, fields);
     }
   }

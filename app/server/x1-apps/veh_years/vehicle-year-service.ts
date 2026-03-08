@@ -16,6 +16,7 @@ import {
 import { UIComponentType } from "~/shared/admin.enums";
 
 export class YearAppService extends FrameWorkAppService {
+  
   async YearList() {
     const sqlQuery = this.query({ vm: TABLE_NAMES.VEHICLE_YEAR }).select(
       "id",

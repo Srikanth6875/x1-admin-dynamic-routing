@@ -88,7 +88,6 @@ export async function action({
 }: ActionFunctionArgs): Promise<ActionData> {
   const formData = await request.formData();
   const formDataObj = formDataToObject(formData);
-  console.log("formDataObj--", formDataObj);
 
   return requestStore.run(
     {

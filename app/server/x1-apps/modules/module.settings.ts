@@ -10,12 +10,14 @@ export const MODULES_FIELDS = (): FormFields => {
       hidden: true,
     },
 
-    // xm_xa_id: {
-    //   db: "xm_xa_id",
-    //   type: "number",
-    //   required: true,
-    //   label: "App ID",
-    // },
+    xm_xa_id: {
+      db: "xm_xa_id",
+      type: "select",
+      required: true,
+      label: "App",
+      options: [],
+      reloadOnChange: true,
+    },
 
     xm_name: {
       db: "xm_name",
@@ -26,28 +28,13 @@ export const MODULES_FIELDS = (): FormFields => {
       label: "Module Name",
     },
 
-    xm_label: {
-      db: "xm_label",
+    xm_shortcut: {
+      db: "xm_shortcut",
       type: "text",
       required: true,
       min: 2,
-      max: 150,
-      label: "Module Label",
-    },
-
-    xm_class: {
-      db: "xm_class",
-      type: "text",
-      required: true,
-      min: 2,
-      max: 150,
-      label: "Module Service Class",
-    },
-
-    xm_default_runtype_id: {
-      db: "xm_default_runtype_id",
-      type: "number",
-      label: "Default RunType ID",
+      max: 50,
+      label: "Module Shortcut",
     },
 
     xm_status: {
@@ -61,14 +48,13 @@ export const MODULES_FIELDS = (): FormFields => {
     },
   };
 };
+
 export const MODULES_COLUMNS_CONFIG: ColumnMetadata[] = [
   { key: "xm_id", label: "ID", type: "number" },
-  { key: "xm_xa_id", label: "App ID", type: "number" },
-  { key: "xm_name", label: "Code", type: "string" },
-  { key: "xm_label", label: "Label", type: "string" },
-  { key: "xm_class", label: "Service Class", type: "string" },
-  { key: "xm_default_runtype_id", label: "Default RunType", type: "number" },
-  { key: "xm_status", label: "Status", type: "number" },
+  { key: "app_name", label: "App Name", type: "string" },
+  { key: "xm_name", label: "Module Name", type: "string" },
+  { key: "xm_shortcut", label: "Module Shortcut", type: "string" },
+  { key: "xm_status", label: "Status", type: "string" },
   { key: "xm_created_time", label: "Created", type: "string" },
   { key: "xm_last_updated", label: "Updated", type: "string" },
 ];

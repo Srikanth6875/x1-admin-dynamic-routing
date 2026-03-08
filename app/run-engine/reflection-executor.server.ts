@@ -26,9 +26,11 @@ async function executeReflection(className: string, methodName: string) {
 }
 
 export async function executeWithPermission({ userId, app_type, run_type }: ExecuteWithPermission) {
-
+     
   const permission = await getUserExecutionPermission(Number(userId), app_type, run_type);
+
   const { class_Name, class_Method_Name } = assertPermission(permission);
 
   return executeReflection(class_Name, class_Method_Name);
+  
 }

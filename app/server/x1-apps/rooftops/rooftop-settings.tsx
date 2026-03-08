@@ -1,7 +1,7 @@
 import type { ColumnMetadata } from "@codeJ09/design-system/data-table";
 import type { TableActionBtn } from "~/types/listining-types";
 import type { FormFields } from "~/types/form.types";
-import type { DetailSection, DetailTable } from "~/types/admin-details.types";
+import type { DetailTable } from "~/types/admin-details.types";
 import { VEHICLE_COLUMNS_CONFIG } from "../vehicles/vehicles-settings";
 
 export const ROOFTOP_TABLE_ACTION_CONFIG: {

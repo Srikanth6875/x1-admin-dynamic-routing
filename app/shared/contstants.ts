@@ -15,12 +15,12 @@ export const sidebarItems = [
   { name: "Trim", appType: "TRIM", runType: "GET_TRIMS" },
   { name: "Int/Ext Colors", appType: "COLOUR", runType: "GET_COLOURS" },
   { name: "Years", appType: "YEAR", runType: "GET_YEARS" },
+  { name: "Bodytype", appType: "BODY_TYPE", runType: "GET_BODY_TYPES" },
   { name: "Users", appType: "USER", runType: "GET_USERS" },
   { name: "Users Type", appType: "USER_TYPE", runType: "GET_USER_TYPES" },
   { name: "Roles", appType: "ROLE", runType: "GET_ROLES" },
   { name: "Apps", appType: "APPS", runType: "GET_APPS" },
   { name: "Modules", appType: "MODULES", runType: "GET_MODULES" },
-
   { name: "RunTypes", appType: "RUNTYPES", runType: "GET_RUNTYPES" },
 ];
 
@@ -41,7 +41,7 @@ export const TABLE_NAMES = {
   USER_TYPES: "user_types",
   X_APPS: "x_apps",
   X_APP_RUNTYPE: "x_app_run_types",
-  X_APP_MODULES: "x_app_modules",
+  X_APP_MODULE: "x_app_modules",
 };
 
 export const MONGO_COLLECTIONS = {
@@ -65,5 +65,6 @@ export const CLARITY_DATA_TABLE_UNIQUE_IDS = {
   USER_TYPES: "user_types",
   X_APPS: "x_apps",
   X_APP_RUNTYPE: "x_app_run_types",
-  X_APP_MODULES: "x_app_modules",
+  X_APP_MODULE: "x_app_modules",
+  VEHICLE_BODY_TYPE: "veh_body_type",
 };

@@ -82,6 +82,7 @@ export interface DeleteRenderDescriptor {
 
 export interface SaveFormResult {
   success: boolean;
+   record_id?: number;
   message?: string;
   errors?: Record<string, string>;
 }

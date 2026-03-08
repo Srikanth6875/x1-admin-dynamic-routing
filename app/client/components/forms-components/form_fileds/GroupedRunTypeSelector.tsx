@@ -9,6 +9,7 @@ type RunTypeOption = {
   label: string;
   value: string | number;
   app_type_id: string | number;
+  [key: string]: string | number;
 };
 
 type AppTypeOption = {
@@ -19,17 +20,15 @@ type AppTypeOption = {
 type GroupedRunTypeSelectorProps = {
   name: string;
   label?: string;
-  /** All available run type options (must include app_type_id) */
   options: RunTypeOption[];
-  /** Currently selected app types — used to know which groups to show */
   appTypeOptions?: AppTypeOption[];
-  /** Currently selected run type IDs */
   values: (string | number)[];
   onChange: (vals: (string | number)[]) => void;
   onBlur?: (name: string) => void;
   required?: boolean;
   error?: string;
   readOnly?: boolean;
+  groupedBy?: string; 
 };
 
 export const GroupedRunTypeSelector = forwardRef<
@@ -48,40 +47,40 @@ export const GroupedRunTypeSelector = forwardRef<
       required = false,
       error,
       readOnly = false,
+      groupedBy, 
     },
     ref,
   ) => {
-    // Which accordion groups are open — default all open
     const [openGroups, setOpenGroups] = useState<Set<string | number>>(
       () => new Set(options.map((o) => o.app_type_id)),
     );
 
-    // Build groups: { appTypeId -> { label, runTypes[] } }
     const groups = useMemo(() => {
-      const map = new Map<
-        string | number,
-        { label: string; runTypes: RunTypeOption[] }
-      >();
+      const map = new Map<string, { label: string; runTypes: RunTypeOption[] }>();
 
       options.forEach((rt) => {
-        if (!map.has(rt.app_type_id)) {
+        const groupKey = groupedBy
+          ? String(rt[groupedBy] ?? rt.app_type_id)
+          : String(rt.app_type_id);
+
+        if (!map.has(groupKey)) {
           const appType = appTypeOptions.find(
-            (a) => String(a.value) === String(rt.app_type_id),
+            (a) => String(a.value) === groupKey,
           );
-          map.set(rt.app_type_id, {
-            label: appType?.label ?? `App Type ${rt.app_type_id}`,
+          map.set(groupKey, {
+            label: appType?.label ?? groupKey,
             runTypes: [],
           });
         }
-        map.get(rt.app_type_id)!.runTypes.push(rt);
+        map.get(groupKey)!.runTypes.push(rt);
       });
 
-      return Array.from(map.entries()).map(([appTypeId, data]) => ({
-        appTypeId,
+      return Array.from(map.entries()).map(([groupKey, data]) => ({
+        appTypeId: groupKey,
         label: data.label,
         runTypes: data.runTypes,
       }));
-    }, [options, appTypeOptions]);
+    }, [options, appTypeOptions, groupedBy]);
 
     const toggleGroup = useCallback((appTypeId: string | number) => {
       setOpenGroups((prev) => {
@@ -149,8 +148,7 @@ export const GroupedRunTypeSelector = forwardRef<
                 d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"
               />
             </svg>
-            <p className="text-sm font-medium">No app types selected</p>
-            <p className="text-xs">Select app types above to see run types</p>
+            <p className="text-xs">Select above to see run types</p>
           </div>
         </div>
       );
@@ -199,8 +197,7 @@ export const GroupedRunTypeSelector = forwardRef<
               isSelected(r.value),
             ).length;
             const allGroupSelected = selectedInGroup === runTypes.length;
-            const someGroupSelected =
-              selectedInGroup > 0 && !allGroupSelected;
+            const someGroupSelected = selectedInGroup > 0 && !allGroupSelected;
 
             return (
               <div
@@ -218,7 +215,7 @@ export const GroupedRunTypeSelector = forwardRef<
                     {/* Group checkbox */}
                     {!readOnly && (
                       <div
-                        className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                        className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all ${
                           allGroupSelected
                             ? "bg-indigo-400 border-indigo-400"
                             : someGroupSelected
@@ -294,14 +291,14 @@ export const GroupedRunTypeSelector = forwardRef<
                         return (
                           <label
                             key={String(rt.value)}
-                            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-all select-none group ${
+                            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all select-none group ${
                               selected
                                 ? "bg-indigo-50 border-indigo-300 shadow-sm"
                                 : "bg-gray-50 border-gray-200 hover:border-indigo-200 hover:bg-indigo-50/40"
                             } ${readOnly ? "cursor-default opacity-70" : "cursor-pointer"}`}
                           >
                             <div
-                              className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                              className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-all ${
                                 selected
                                   ? "bg-indigo-600 border-indigo-600"
                                   : "bg-white border-gray-300 group-hover:border-indigo-400"
@@ -353,7 +350,7 @@ export const GroupedRunTypeSelector = forwardRef<
         {error && (
           <p className="mt-2 text-xs text-red-600 flex items-center gap-1.5">
             <svg
-              className="w-3.5 h-3.5 flex-shrink-0"
+              className="w-3.5 h-3.5 shrink-0"
               fill="currentColor"
               viewBox="0 0 20 20"
             >

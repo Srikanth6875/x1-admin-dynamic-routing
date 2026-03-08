@@ -21,7 +21,8 @@ export type FieldType =
   | "guid"
   | "multiselectdropdown"
   | "picklist"
-  | "groupedruntype";
+  | "groupedruntype"
+  | "hierarchicalcheckbox";
 
 export interface SelectOption {
   label: string;
@@ -63,6 +64,7 @@ export interface FormField {
   reloadOnChange?: boolean;
   groupedBy?: string;
   appTypeOptions?: Option[];
+  excludeFromUrl?: boolean;
 }
 
 export interface UIFormField extends FormField {

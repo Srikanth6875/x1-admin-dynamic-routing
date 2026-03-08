@@ -1,12 +1,6 @@
 import { FrameWorkAppService } from "~/server/frame-work/frame-work-app-service";
 
 export class UserTypeRepository extends FrameWorkAppService {
-  async getUserTypeById(utId: number) {
-    return this.query("user_types")
-      .select("ut_id", "ut_name")
-      .where("ut_id", utId)
-      .first();
-  }
 
   async getActiveRoles() {
     return this.query("roles")
@@ -22,9 +16,7 @@ export class UserTypeRepository extends FrameWorkAppService {
 
   async replaceUserTypeRoles(utId: number, roleIds: number[]) {
     await this.query("user_type_role_map").where("utr_ut_id", utId).del();
-
     if (roleIds.length === 0) return;
-
     await this.query("user_type_role_map").insert(
       roleIds.map((roleId) => ({
         utr_ut_id: utId,

@@ -20,7 +20,7 @@ export const loader = async ({
   );
 
   return requestStore.run(
-    {
+    {    
       formData: {},
       query: urlParams,
     },

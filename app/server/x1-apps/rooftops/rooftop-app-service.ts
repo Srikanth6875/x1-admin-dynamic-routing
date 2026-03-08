@@ -7,7 +7,6 @@ import {
   ROOFTOP_VEHICLE_DETAILS_TABLES,
 } from "~/server/x1-apps/rooftops/rooftop-settings";
 import { UIComponentType } from "~/shared/admin.enums";
-import { requestStore } from "~/database/request-store";
 
 import {
   CLARITY_DATA_TABLE_UNIQUE_IDS,
@@ -124,11 +123,13 @@ export class RoofTopAppService extends FrameWorkAppService {
   }
 
   async RooftopDetails(): Promise<RenderResult> {
-    const params = requestStore.tryGet()?.query ?? {};
-    const rooftopId = params.rt_id;
+    const rooftopId = this.getQueryParam("rt_id");
+  if (!rooftopId) throw new Error("Rooftop ID required");
 
-    const rooftop = await this.getRooftopDetails(rooftopId);
-    const vehicles = await this.getVehiclesByRooftop(rooftopId);
+    const [rooftop, vehicles] = await Promise.all([
+      this.getRooftopDetails(rooftopId),
+      this.getVehiclesByRooftop(rooftopId),
+    ]);
 
     return this.BuildDetails({
       title: "Rooftop Details",
@@ -137,4 +138,5 @@ export class RoofTopAppService extends FrameWorkAppService {
       tables: ROOFTOP_VEHICLE_DETAILS_TABLES,
     });
   }
+  
 }

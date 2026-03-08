@@ -12,5 +12,6 @@ export * from "~/server/x1-apps/user_types/userType.app.service";
 export * from "~/server/x1-apps/app_service/app.service";
 export * from "~/server/x1-apps/runType_service/runtype.service";
 export * from "~/server/x1-apps/modules/module.service";
+export * from "~/server/x1-apps/veh_bodytype/bodytype-app.service";
 
 // export * from "~/server/x1-apps/veh-year-body-color/veh-ybr-service";

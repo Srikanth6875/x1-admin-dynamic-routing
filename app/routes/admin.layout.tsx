@@ -51,9 +51,6 @@ export default function AppLayout() {
       return appPerms?.includes(item.runType);
     });
   }
-
-  console.log("topNavItems---",topNavItems,"----sidebarItems",sidebarItems);
-console.log("permission",permissions);
   
   const filteredTopNav = filterMenu(topNavItems, permissions);
   const filteredSidebar = filterMenu(sidebarItems, permissions);

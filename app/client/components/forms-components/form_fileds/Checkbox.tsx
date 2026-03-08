@@ -8,7 +8,7 @@ import {
 export type CheckboxProps = {
   name: string;
   label?: string;
-  value: 1 | 0; // <-- store 1 or 0 directly
+  value: 1 | 0; 
   onChange: (value: 1 | 0) => void;
   onBlur?: (name: string) => void;
   required?: boolean;

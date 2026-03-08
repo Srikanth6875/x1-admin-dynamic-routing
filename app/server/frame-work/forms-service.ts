@@ -67,9 +67,7 @@ export function prepareDbPayload(
   return payload;
 }
 
-export function mapFormFieldsToDetailFields(
-  fields: FormFields
-): DetailField[] {
+export function mapFormFieldsToDetailFields(fields: FormFields): DetailField[] {
   return Object.entries(fields)
     .filter(([_, def]) => !def.hidden)
     .map(([key, def]) => ({
@@ -78,7 +76,6 @@ export function mapFormFieldsToDetailFields(
     }));
 }
 
-//DB Errro handling 
 export function handleDbError(
   err: unknown,
   formFields?: FormFields,
@@ -89,6 +86,14 @@ export function handleDbError(
     constraint?: string;
   };
 
+  if (error.code === "53300")
+    return { success: false, message: "Server busy, please retry." };
+  if (error.code === "40P01")
+    return { success: false, message: "Conflict detected, please retry." };
+  if (error.code === "23503")
+    return { success: false, message: "Related record not found." };
+  if (error.code === "23502")
+    return { success: false, message: "Required field missing." };
   if (error.code !== "23505") {
     console.error("Database error:", error);
     return {
@@ -104,7 +109,6 @@ export function handleDbError(
       success: false,
       message: "A record with these values already exists.",
     };
-    
   }
 
   const mainColumn = columns[columns.length - 1];
@@ -126,11 +130,11 @@ export function handleDbError(
   let context = "";
   if (columns.length > 1) {
     const contextLabels: string[] = [];
-    
+
     for (let i = 0; i < columns.length - 1; i++) {
       const col = columns[i];
       let colLabel = ColumnReplace(col);
-      
+
       if (formFields) {
         const fieldEntry = Object.entries(formFields).find(
           ([_, def]) => def.db === col,
@@ -139,10 +143,10 @@ export function handleDbError(
           colLabel = fieldEntry[1].label?.trim() || colLabel;
         }
       }
-      
+
       contextLabels.push(colLabel);
     }
-    
+
     if (contextLabels.length > 0) {
       context = ` for this ${contextLabels.join(" + ")}`;
     }
@@ -152,7 +156,6 @@ export function handleDbError(
     success: false,
     message: `${label} "${mainValue}" already exists${context}`,
   };
-  
 }
 
 function extractColumnsAndValues(detail?: string): {
@@ -167,21 +170,22 @@ function extractColumnsAndValues(detail?: string): {
   const columnsPart = match[1];
   const valuesPart = match[2];
 
-  const columns = columnsPart.split(",").map((s) => s.trim().replace(/"/g, "")); // "trim" → trim
+  const columns = columnsPart.split(",").map((s) => s.trim().replace(/"/g, ""));
 
   const values = valuesPart
     .split(",")
-    .map((s) => s.trim().replace(/^["']|["']$/g, "")); // 'C Class' → C Class
+    .map((s) => s.trim().replace(/^["']|["']$/g, ""));
 
   return { columns, values };
 }
 
-
 function ColumnReplace(column: string): string {
-  return column
-    .replace(/^[a-z]{1,4}_/i, "")             // remove tbl_, veh_, etc.
-    .replace(/_id$|_name$|_code$/i, "")       // make_id → make, trim_name → trim
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, c => c.toUpperCase())
-    .trim() || "Value";
+  return (
+    column
+      .replace(/^[a-z]{1,4}_/i, "")
+      .replace(/_id$|_name$|_code$/i, "")
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+      .trim() || "Value"
+  );
 }

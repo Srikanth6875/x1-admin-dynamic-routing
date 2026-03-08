@@ -24,7 +24,7 @@ export function DynamicDetails({ payload }: Props) {
   // formatingvalues
   const formatValue = useCallback(
     (value: unknown, render?: DetailField["render"]) => {
-      if (value === null || value === undefined || value === "") return "—";
+      if (value === null || value === undefined || value === "") return "-";
 
       switch (render) {
         case "status":
